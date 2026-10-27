@@ -24,7 +24,6 @@ nav .tel{font-family:var(--font-mono);font-size:13.5px;color:var(--c-text-2)}
 nav .btn{height:38px;font-size:14px;padding:0 16px}
 /* hero */
 .hero{padding:96px 0 104px;border-top:0;position:relative;overflow:hidden}
-.hero .wake{position:absolute;left:-60px;bottom:-40px;width:760px;opacity:.5;pointer-events:none}
 .hero .grid{display:grid;grid-template-columns:1.08fr 1fr;gap:72px;align-items:center;position:relative}
 .hero h1{font-size:var(--text-hero);line-height:var(--leading-hero);letter-spacing:var(--tracking-display);margin:26px 0 28px}
 .hero h1 em{font-style:normal;color:var(--c-accent)}
@@ -235,7 +234,6 @@ footer .fine2{grid-column:1/-1;border-top:1px solid var(--c-border);padding-top:
   :root{--text-hero:44px;--leading-hero:46px;--text-h2:32px;--leading-h2:37px;--text-h3:22px;--leading-h3:28px;--text-lead:17px;--leading-lead:27px;--gutter:20px;--section-y:64px}
   nav ul,nav .tel{display:none}
   .hero{padding:48px 0 56px}
-  .hero .wake{width:420px;left:-80px;opacity:.35}
   .soft .split,.hero .grid,.split,.faq,.how,.contact{grid-template-columns:1fr;gap:36px}
   .hero .facts{grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
   .facts b{font-size:19px;line-height:24px}
