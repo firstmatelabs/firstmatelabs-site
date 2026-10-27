@@ -32,7 +32,7 @@ function live(api, { mode, muted = false, lines = LINES, sec = 34 }) {
 
 export function draw(name, api) {
   switch (name) {
-    case "idle": case "mic": case "unsupported": case "denied": case "connecting": case "busy": case "error":
+    case "idle": case "consent": case "mic": case "unsupported": case "denied": case "connecting": case "busy": case "error":
       return api.show(name);
     case "speaking": return live(api, { mode: "speaking" });
     case "listening": return live(api, { mode: "listening", sec: 72 });
