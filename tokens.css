@@ -1,0 +1,48 @@
+/* First Mate Labs · website tokens
+   Extends the First Mate app tokens (../first-mate/app/tokens.css). Same palette, dark only.
+   Website scale is larger than the app scale. No light theme. */
+@font-face{font-family:"Inter Tight";src:url("fonts/InterTight-Variable.ttf") format("truetype");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Inter";src:url("fonts/Inter-Variable.ttf") format("truetype");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("fonts/GeistMono-Variable.ttf") format("truetype");font-weight:100 900;font-display:swap}
+:root{
+  /* surfaces */
+  --c-bg:#08090A;
+  --c-surface:#0E0F11;
+  --c-surface-2:#141518;
+  --c-hover:#1A1B1F;
+  --c-border:#1E2024;
+  --c-border-strong:#2A2D33;
+  /* text */
+  --c-text:#F4F5F6;
+  --c-text-2:#B4B8BF;
+  --c-muted:#7E838C;
+  --c-faint:#4C5058;
+  /* accent: one colour, used sparingly */
+  --c-accent:#86D1EC;
+  --c-accent-soft:rgba(134,209,236,0.10);
+  --c-accent-line:rgba(134,209,236,0.45);
+  --c-on-accent:#071218;
+  /* status */
+  --c-warn:#E8B45A;
+  --c-warn-soft:rgba(232,180,90,0.12);
+  --c-danger:#E5796F;
+  --c-danger-soft:rgba(229,121,111,0.12);
+  /* type */
+  --font-display:"Inter Tight","Inter",system-ui,sans-serif;
+  --font-sans:"Inter",system-ui,sans-serif;
+  --font-mono:"Geist Mono","JetBrains Mono",ui-monospace,monospace;
+  --text-hero:72px;   --leading-hero:72px;
+  --text-h2:44px;     --leading-h2:48px;
+  --text-h3:26px;     --leading-h3:32px;
+  --text-lead:19px;   --leading-lead:30px;
+  --text-body:16px;   --leading-body:26px;
+  --text-small:14px;  --leading-small:21px;
+  --text-micro:12.5px;--leading-micro:18px;
+  --tracking-display:-0.035em;
+  --tracking-h2:-0.03em;
+  /* shape + space */
+  --r-sm:6px; --r-md:8px; --r-lg:12px; --r-xl:16px; --r-pill:999px;
+  --container:1200px; --gutter:40px; --section-y:112px;
+  --shadow-popover:0 8px 24px -6px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.06);
+  --shadow-focus:0 0 0 2px rgba(134,209,236,0.35);
+}

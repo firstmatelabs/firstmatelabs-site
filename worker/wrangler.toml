@@ -1,0 +1,34 @@
+# Token endpoint for the voice demo. Placeholders only: nothing here is deployed or secret.
+name = "firstmatelabs-demo-token"
+main = "index.js"
+compatibility_date = "2026-10-01"
+
+# Route the Worker on the site's own domain once DNS is on Cloudflare, e.g.:
+# routes = [{ pattern = "firstmatelabs.com/api/demo/*", zone_name = "firstmatelabs.com" }]
+# Or use the workers.dev URL and put it in demo/config.js as tokenEndpoint.
+
+[vars]
+# Exact origins allowed to call the endpoint (comma separated). Add the preview host while testing.
+ALLOWED_ORIGINS = "https://firstmatelabs.com,https://www.firstmatelabs.com"
+
+# Business key -> ElevenLabs agent ID. Fill in at launch. IDs are not secret.
+AGENT_IDS = '{"dental":"","hvac":"","roofing":"","medspa":"","law":""}'
+
+# Call caps. Suggested values from SPEC 6.4; the owner sets the daily numbers.
+PER_IP_PER_HOUR = "5"
+DAILY_PER_AGENT = "40"
+DAILY_TOTAL = "200"
+MAX_CONCURRENT = "4"   # the plan's cap: Free 4, Starter 6, Creator 10, Pro 20
+SLOT_SECONDS = "190"   # 180 s call plus margin
+
+[[durable_objects.bindings]]
+name = "LIMITS"
+class_name = "DemoLimits"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["DemoLimits"]
+
+# Secrets (never in this file). Set with:
+#   npx wrangler secret put ELEVENLABS_API_KEY
+#   npx wrangler secret put TURNSTILE_SECRET
