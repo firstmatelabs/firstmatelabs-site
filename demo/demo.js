@@ -44,7 +44,6 @@ const chip = (text, cls = "") => `<span class="chip ${cls}">${text}</span>`;
 const fictional = chip("Fictional Demo");
 const elfoot = (left = "Demo agents. Calls end after 3 minutes.") =>
   `<div class="elfoot"><span>${left}</span><span class="el">Powered by ElevenLabs</span></div>`;
-const NOTICE = "You're about to talk to an AI, not a person. Your voice is sent to ElevenLabs, and the call is transcribed. We keep the transcript for 30 days. Don't share personal, health or payment information.";
 const LINKS = '<a class="inline" href="privacy/" target="_blank" rel="noopener">Privacy Policy</a> · <a class="inline" href="ai-voice-disclosure/" target="_blank" rel="noopener">AI and Voice Disclosure</a>';
 const note = (...rows) => `<div class="note">${rows.filter(Boolean).map(([icon, text]) => `<div>${icon}<span>${text}</span></div>`).join("")}</div>`;
 const startBtn = (label) => `<button class="btn primary big" type="button" data-act="start">${MIC}${label}</button>`;
@@ -59,11 +58,11 @@ const TEMPLATES = {
     return `<div class="meta">${fictional}<span>Not a real business</span></div><h3>${esc(b.name)}</h3><p class="persona">${esc(b.persona)}</p>
 <div class="greet"><small>Opening Line</small><q>${esc(b.greet)}</q></div>
 ${go}
-${note([NOTE_MIC, "Your browser will ask to use your microphone. We only use it for this call."], [NOTE_INFO, `${NOTICE} ${LINKS}`], b.health && [NOTE_INFO, "Demo only. Do not share health information."])}${elfoot()}`;
+${note([NOTE_MIC, "Your browser will ask to use your microphone. We only use it for this call."], [NOTE_INFO, `Calls are with an AI and are transcribed. ${LINKS}`], b.health && [NOTE_INFO, "This is a demo. Please don't share health details."])}${elfoot()}`;
   },
   consent(b) {
-    return `<div class="meta">${fictional}<span>${esc(b.name)}</span></div><h3>Before you start</h3>
-<div class="consent" role="group" aria-label="Demo call consent"><p>You're about to talk to an <strong>AI</strong>, not a person. Your voice is sent to ElevenLabs, and the call is <strong>transcribed</strong>. We keep the transcript for 30 days. Don't share personal, health or payment information. By clicking <strong>Start call</strong> you agree to this and confirm you are 18 or older.</p><p class="lk">${LINKS}</p></div>
+    return `<div class="meta">${fictional}<span>${esc(b.name)}</span></div><h3>Before You Start</h3>
+<div class="consent" role="group" aria-label="Demo call consent"><p>You're about to talk to an <strong>AI</strong>, not a person. Your voice is sent to ElevenLabs, and the call is <strong>transcribed</strong>. We keep the transcript for 30 days. Don't share personal, health or payment information. By clicking <strong>Start Call</strong> you agree to this and confirm you are 18 or older.</p><p class="lk">${LINKS}</p></div>
 <div class="go"><button class="btn primary big" type="button" data-act="consent-yes">${MIC}Start Call</button><button class="btn big2" type="button" data-act="consent-no">Cancel</button></div>${elfoot()}`;
   },
   mic(b) {
