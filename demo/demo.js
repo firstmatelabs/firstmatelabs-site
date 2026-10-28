@@ -5,10 +5,10 @@ import config from "./config.js";
 
 const EMAIL = "hello@firstmatelabs.com";
 const BIZ = [
-  { key: "dental", name: "Alder Creek Dental", persona: "A calm front-desk assistant. Books cleanings and exams, answers hours and insurance questions, and flags dental emergencies.", greet: "Thanks for calling Alder Creek Dental. I'm the practice's AI assistant, and this is a demo. Are you calling to book a visit, or do you have a question?" },
+  { key: "dental", health: true, name: "Alder Creek Dental", persona: "A calm front-desk assistant. Books cleanings and exams, answers hours and insurance questions, and flags dental emergencies.", greet: "Thanks for calling Alder Creek Dental. I'm the practice's AI assistant, and this is a demo. Are you calling to book a visit, or do you have a question?" },
   { key: "hvac", name: "Ridgeline Heating & Air", persona: "A practical dispatcher. Finds out if the system is down, who is at home and how urgent it is, then books a visit.", greet: "Ridgeline Heating and Air, demo line. I'm an AI assistant. Is your system down right now, or do you want to schedule a visit?" },
   { key: "roofing", name: "Cedar Line Roofing", persona: "Direct and unhurried. Separates leaks and storm damage from planned replacements and books an estimate.", greet: "Cedar Line Roofing, this is the demo assistant. Are you dealing with a leak right now, or planning a new roof?" },
-  { key: "medspa", name: "Juniper Skin & Wellness", persona: "Warm and low-pressure. Books consultations, explains treatments in general terms and gives no medical advice.", greet: "Welcome to Juniper Skin and Wellness. I'm an AI assistant for this demo. Would you like to book a consultation, or ask about a treatment?" },
+  { key: "medspa", health: true, name: "Juniper Skin & Wellness", persona: "Warm and low-pressure. Books consultations, explains treatments in general terms and gives no medical advice.", greet: "Welcome to Juniper Skin and Wellness. I'm an AI assistant for this demo. Would you like to book a consultation, or ask about a treatment?" },
   { key: "law", name: "Halden Law Group", persona: "Formal intake. Collects the caller's details and the type of matter, gives no legal advice and offers a consultation.", greet: "Halden Law Group. I'm an AI assistant in a demo, and I can't give legal advice. I can take your details and set up a consultation. What is this regarding?" },
 ];
 
@@ -33,6 +33,7 @@ let attempt = 0;
 let conv = null;
 let call = null; // { t0, mode, muted, userEnded, tick, raf, last }
 let sdk = null;
+let consented = false; // click-to-consent given for the next call; cleared once a call goes live or the business changes
 
 const biz = () => BIZ[bizIdx];
 const ready = (b) => config.enabled && (config.tokenEndpoint ? !!config.turnstileSiteKey : !!config.agentIds[b.key]);
@@ -43,7 +44,8 @@ const chip = (text, cls = "") => `<span class="chip ${cls}">${text}</span>`;
 const fictional = chip("Fictional Demo");
 const elfoot = (left = "Demo agents. Calls end after 3 minutes.") =>
   `<div class="elfoot"><span>${left}</span><span class="el">Powered by ElevenLabs</span></div>`;
-const note = (...rows) => `<div class="note">${rows.map(([icon, text]) => `<div>${icon}<span>${text}</span></div>`).join("")}</div>`;
+const LINKS = '<a class="inline" href="privacy/" target="_blank" rel="noopener">Privacy Policy</a> · <a class="inline" href="ai-voice-disclosure/" target="_blank" rel="noopener">AI and Voice Disclosure</a>';
+const note = (...rows) => `<div class="note">${rows.filter(Boolean).map(([icon, text]) => `<div>${icon}<span>${text}</span></div>`).join("")}</div>`;
 const startBtn = (label) => `<button class="btn primary big" type="button" data-act="start">${MIC}${label}</button>`;
 const emailBtn = (label, cls) => `<a class="btn ${cls}" href="mailto:${EMAIL}">${label}</a>`;
 const barsHTML = (n, h = 0.08) => `<i style="--h:${h}"></i>`.repeat(n);
@@ -56,7 +58,12 @@ const TEMPLATES = {
     return `<div class="meta">${fictional}<span>Not a real business</span></div><h3>${esc(b.name)}</h3><p class="persona">${esc(b.persona)}</p>
 <div class="greet"><small>Opening Line</small><q>${esc(b.greet)}</q></div>
 ${go}
-${note([NOTE_MIC, "Your browser will ask to use your microphone. We only use it for this call."], [NOTE_INFO, 'Calls are transcribed. See the <a class="inline" href="privacy/">Privacy Policy</a> for what we keep.'])}${elfoot()}`;
+${note([NOTE_MIC, "Your browser will ask to use your microphone. We only use it for this call."], [NOTE_INFO, `Calls are with an AI and are transcribed. ${LINKS}`], b.health && [NOTE_INFO, "This is a demo. Please don't share health details."])}${elfoot()}`;
+  },
+  consent(b) {
+    return `<div class="meta">${fictional}<span>${esc(b.name)}</span></div><h3>Before You Start</h3>
+<div class="consent" role="group" aria-label="Demo call consent"><p>You're about to talk to an <strong>AI</strong>, not a person. Your voice is sent to ElevenLabs, and the call is <strong>transcribed</strong>. We keep the transcript for 30 days. Don't share personal, health or payment information. By clicking <strong>Start Call</strong> you agree to this and confirm you are 18 or older.</p><p class="lk">${LINKS}</p></div>
+<div class="go"><button class="btn primary big" type="button" data-act="consent-yes">${MIC}Start Call</button><button class="btn big2" type="button" data-act="consent-no">Cancel</button></div>${elfoot()}`;
   },
   mic(b) {
     return TEMPLATES.idle(b, `<div class="go"><button class="btn primary big dis" type="button" aria-disabled="true">${MIC}Allow Microphone</button><span class="limit">Choose Allow in your browser's prompt.</span></div>`);
@@ -249,7 +256,14 @@ async function credential(b) {
   return { conversationToken: (await res.json()).conversationToken };
 }
 
-async function start() {
+function ask() {
+  if (!ready(biz()) || locked()) return;
+  if (consented) return begin();
+  show("consent");
+  stage.querySelector('[data-act="consent-yes"]')?.focus();
+}
+
+async function begin() {
   if (!ready(biz()) || locked()) return;
   if (!navigator.mediaDevices?.getUserMedia) return show("unsupported");
   const mine = ++attempt;
@@ -297,6 +311,7 @@ function fail(e) {
 // ---- live call ----
 function enterLive() {
   if (view === "live") return;
+  consented = false;
   showLive();
   call.tick = setInterval(() => {
     const sec = (performance.now() - call.t0) / 1000;
@@ -374,11 +389,18 @@ function toggleMute() {
 }
 
 // ---- wiring ----
-const actions = { start, end: endCall, mute: toggleMute };
+const actions = {
+  start: ask,
+  "consent-yes": () => { consented = true; begin(); },
+  "consent-no": () => show("idle"),
+  end: endCall,
+  mute: toggleMute,
+};
 stage.addEventListener("click", (e) => actions[e.target.closest("[data-act]")?.dataset.act]?.());
 picks.forEach((p, i) => p.addEventListener("click", () => {
   if (locked()) return;
   bizIdx = i;
+  consented = false;
   show("idle");
 }));
 addEventListener("pagehide", () => conv?.endSession());
