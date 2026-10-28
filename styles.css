@@ -197,7 +197,9 @@ nav .btn{height:38px;font-size:14px;padding:0 16px}
 .soft h2{font-size:32px;line-height:38px;margin:16px 0 14px}
 .sw{display:grid;grid-template-columns:200px 1fr auto;gap:28px;align-items:baseline;padding:26px 0;border-bottom:1px solid var(--c-border)}
 .sw:first-child{border-top:1px solid var(--c-border-strong)}
-.sw b{font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:-0.02em}
+.sw b{font-family:var(--font-display);font-weight:600;font-size:24px;letter-spacing:-0.02em;display:flex;align-items:flex-start;gap:14px}
+.sw b img{width:40px;height:40px;flex:none}
+.sw b>span{align-self:baseline}
 .sw .dom{font-family:var(--font-mono);font-size:12.5px;color:var(--c-muted);display:block;margin-top:2px;font-weight:400;letter-spacing:0}
 .sw p{color:var(--c-text-2);font-size:15.5px;line-height:24px}
 .legal{margin-top:18px;font-size:13px;line-height:20px;color:var(--c-muted)}
