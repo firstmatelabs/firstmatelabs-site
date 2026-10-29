@@ -12,7 +12,7 @@ compatibility_date = "2026-10-01"
 ALLOWED_ORIGINS = "https://firstmatelabs.com,https://www.firstmatelabs.com"
 
 # Business key -> ElevenLabs agent ID. Fill in at launch. IDs are not secret.
-AGENT_IDS = '{"dental":"","hvac":"","roofing":"","medspa":"","law":""}'
+AGENT_IDS = '{"dental":"","hvac":"","roofing":"","medspa":"","law":"","realestate":""}'
 
 # Call caps. Suggested values from SPEC 6.4; the owner sets the daily numbers.
 PER_IP_PER_HOUR = "5"

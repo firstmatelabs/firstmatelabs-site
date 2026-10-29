@@ -10,7 +10,7 @@
 
 import { DurableObject } from "cloudflare:workers";
 
-const BUSINESSES = ["dental", "hvac", "roofing", "medspa", "law"];
+const BUSINESSES = ["dental", "hvac", "roofing", "medspa", "law", "realestate"];
 
 const num = (v, fallback) => (Number.isFinite(Number(v)) && v !== "" && v != null ? Number(v) : fallback);
 

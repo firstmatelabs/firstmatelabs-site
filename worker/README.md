@@ -1,6 +1,6 @@
 # Demo token endpoint (Cloudflare Worker)
 
-`POST /api/demo/session` with `{ "business": "dental|hvac|roofing|medspa|law", "turnstileToken": "..." }` returns `{ "conversationToken": "..." }`, or:
+`POST /api/demo/session` with `{ "business": "dental|hvac|roofing|medspa|law|realestate", "turnstileToken": "..." }` returns `{ "conversationToken": "..." }`, or:
 
 | Status | Meaning |
 |---|---|
