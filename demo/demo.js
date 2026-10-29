@@ -16,7 +16,7 @@ const BIZ = [
 const stage = document.getElementById("demo-stage");
 const picks = [...document.querySelectorAll("#demo-biz [data-biz]")];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const phone = matchMedia("(max-width: 767px)"); // phones: the stage opens inline under the chosen business
+const phone = matchMedia("(max-width: 1023px)"); // below 1024px: the stage opens inline under the chosen business
 const home = stage.parentElement;
 const svg = (w, body, extra = "") => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" ${extra}>${body}</svg>`;
 const MIC_BODY = '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>';
