@@ -16,6 +16,8 @@ const BIZ = [
 const stage = document.getElementById("demo-stage");
 const picks = [...document.querySelectorAll("#demo-biz [data-biz]")];
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const phone = matchMedia("(max-width: 767px)"); // phones: the stage opens inline under the chosen business
+const home = stage.parentElement;
 const svg = (w, body, extra = "") => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" ${extra}>${body}</svg>`;
 const MIC_BODY = '<rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>';
 const MIC = svg(20, MIC_BODY, 'stroke-linejoin="round"');
@@ -105,6 +107,7 @@ ${note([NOTE_CLOCK, "Demo agents. Calls end after 3 minutes."])}${elfoot("")}`;
 // ---- rendering ----
 function show(next) {
   view = next;
+  stage.dataset.view = next;
   stage.innerHTML = TEMPLATES[next](biz());
   picks.forEach((p, i) => {
     const off = locked() && i !== bizIdx;
@@ -112,8 +115,47 @@ function show(next) {
     p.disabled = off;
     p.classList.toggle("dim", off);
   });
+  place();
   const wave = stage.querySelector("[data-wave]");
   if (wave) wave.innerHTML = barsHTML(waveCount(wave));
+}
+
+// On phones the one stage element sits right after the chosen business; elsewhere it stays beside the list.
+function place() {
+  picks.forEach((p, i) => {
+    if (phone.matches) {
+      p.setAttribute("aria-expanded", i === bizIdx);
+      p.setAttribute("aria-controls", "demo-stage");
+    } else {
+      p.removeAttribute("aria-expanded");
+      p.removeAttribute("aria-controls");
+    }
+  });
+  if (phone.matches && picks[bizIdx].nextElementSibling !== stage) picks[bizIdx].after(stage);
+  if (!phone.matches && stage.parentElement !== home) home.append(stage);
+}
+
+function fold(el, open) {
+  if (reduced) return;
+  const shut = { height: "0px", paddingBottom: "0px", opacity: 0 };
+  const full = { height: `${el.offsetHeight}px`, paddingBottom: getComputedStyle(el).paddingBottom, opacity: 1 };
+  el.style.overflow = "hidden";
+  return el.animate(open ? [shut, full] : [full, shut], { duration: 220, easing: "ease-out" }).finished.then(() => { el.style.overflow = ""; });
+}
+
+// Close the old row (a copy of its stage folds away), open the new one, then bring Start Talking into view.
+async function swap(ghost, was) {
+  ghost.removeAttribute("id");
+  ghost.setAttribute("aria-hidden", "true");
+  ghost.inert = true;
+  picks[was].after(ghost);
+  await Promise.all([fold(ghost, false), fold(stage, true)]);
+  ghost.remove();
+  const go = stage.querySelector(".go .btn")?.getBoundingClientRect();
+  const top = document.querySelector("nav").offsetHeight;
+  if (go && (go.top < top || go.bottom > innerHeight)) {
+    scrollTo({ top: scrollY + picks[bizIdx].getBoundingClientRect().top - 80, behavior: reduced ? "auto" : "smooth" });
+  }
 }
 
 function waveCount(wave) {
@@ -192,6 +234,7 @@ function showEnded(kind, seconds) {
   const lines = log && log.children.length ? log.innerHTML : "";
   const b = biz();
   view = "ended";
+  stage.dataset.view = view;
   const sec = Math.min(seconds, config.maxSeconds);
   stage.innerHTML = `<div class="meta">${fictional}<span class="endl">Call Ended</span></div><h3>${esc(b.name)}</h3>
 <div class="live-body one"><div class="wave still" aria-hidden="true" data-wave></div>${lines ? `<div class="tx" role="log">${lines}</div>` : ""}</div>
@@ -400,10 +443,15 @@ const actions = {
 stage.addEventListener("click", (e) => actions[e.target.closest("[data-act]")?.dataset.act]?.());
 picks.forEach((p, i) => p.addEventListener("click", () => {
   if (locked()) return;
+  const was = bizIdx;
+  const ghost = phone.matches && i !== was && stage.cloneNode(true);
   bizIdx = i;
   consented = false;
   show("idle");
+  if (ghost) swap(ghost, was);
 }));
+phone.addEventListener("change", place);
+place();
 addEventListener("pagehide", () => conv?.endSession());
 
 // Dev only: ?demo-state=... draws sample states when config.preview is on.

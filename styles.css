@@ -71,13 +71,6 @@ nav .btn{height:38px;font-size:14px;padding:0 16px}
 .demo-head p{max-width:420px;color:var(--c-text-2)}
 .demo{display:grid;grid-template-columns:420px 1fr;border:1px solid var(--c-border-strong);border-radius:var(--r-xl);background:var(--c-surface);overflow:hidden}
 .biz{border-right:1px solid var(--c-border);padding:10px}
-.biz a{display:grid;grid-template-columns:20px 1fr;gap:14px;padding:16px 14px;border-radius:var(--r-md);border:1px solid transparent;align-items:start}
-.biz a .r{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--c-faint);margin-top:4px}
-.biz a b{display:block;font-family:var(--font-display);font-weight:600;font-size:18px;line-height:24px;letter-spacing:-0.015em}
-.biz a span{display:block;font-size:14px;line-height:20px;color:var(--c-muted);margin-top:2px}
-.biz a.on{background:var(--c-surface-2);border-color:var(--c-border-strong)}
-.biz a.on .r{border-color:var(--c-accent);background:radial-gradient(var(--c-accent) 0 4px,transparent 5px)}
-.biz a.dim{opacity:.45}
 .biz .bn{margin:18px 14px 8px;padding-top:16px;border-top:1px solid var(--c-border);font-size:13px;line-height:19px;color:var(--c-muted)}
 .stage{padding:40px 44px;display:flex;flex-direction:column;min-width:0}
 .stage .meta{display:flex;align-items:center;gap:12px;font-family:var(--font-mono);font-size:12.5px;color:var(--c-muted)}
@@ -284,13 +277,13 @@ nav ul a:focus-visible{outline-offset:6px}
 .btn.primary:hover{background:#9ddaf0;border-color:#9ddaf0}
 .btn[disabled]{background:var(--c-surface-2);border-color:var(--c-border-strong);color:var(--c-text-2);cursor:not-allowed}
 .btn[disabled]:hover{border-color:var(--c-border-strong)}
-.biz button{display:grid;grid-template-columns:20px 1fr;gap:14px;width:100%;padding:16px 14px;border-radius:var(--r-md);border:1px solid transparent;align-items:start;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
-.biz button:hover{background:var(--c-surface-2)}
-.biz button .r{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--c-faint);margin-top:4px}
-.biz button b{display:block;font-family:var(--font-display);font-weight:600;font-size:18px;line-height:24px;letter-spacing:-0.015em}
-.biz button .t>span{display:block;font-size:14px;line-height:20px;color:var(--c-muted);margin-top:2px}
-.biz button[aria-pressed=true]{background:var(--c-surface-2);border-color:var(--c-border-strong)}
-.biz button[aria-pressed=true] .r{border-color:var(--c-accent);background:radial-gradient(var(--c-accent) 0 4px,transparent 5px)}
+.biz>button{display:grid;grid-template-columns:20px 1fr;gap:14px;width:100%;padding:16px 14px;border-radius:var(--r-md);border:1px solid transparent;align-items:start;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.biz>button:hover{background:var(--c-surface-2)}
+.biz>button .r{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--c-faint);margin-top:4px}
+.biz>button b{display:block;font-family:var(--font-display);font-weight:600;font-size:18px;line-height:24px;letter-spacing:-0.015em}
+.biz>button .t>span{display:block;font-size:14px;line-height:20px;color:var(--c-muted);margin-top:2px}
+.biz>button[aria-pressed=true]{background:var(--c-surface-2);border-color:var(--c-border-strong)}
+.biz>button[aria-pressed=true] .r{border-color:var(--c-accent);background:radial-gradient(var(--c-accent) 0 4px,transparent 5px)}
 .how-h2{margin-top:18px;max-width:760px}
 .aside .sub{color:var(--c-text-2);font-size:15px}
 .custom small{font-size:13px;color:var(--c-muted)}
@@ -312,8 +305,8 @@ a.mailto-inline:hover{text-decoration:underline}
 .doc a{color:var(--c-text);text-decoration:underline;text-decoration-color:var(--c-border-strong);text-underline-offset:3px}
 .doc a:hover{text-decoration-color:var(--c-accent)}
 @media (max-width:820px){.doc{padding:48px 0 72px}.doc h1{font-size:34px;line-height:40px}}
-.biz button.dim{opacity:.45;cursor:default}
-.biz button.dim:hover{background:none}
+.biz>button.dim{opacity:.45;cursor:default}
+.biz>button.dim:hover{background:none}
 .stage .go.tight{margin-top:20px}
 @media (min-width:821px){#demo .demo{min-height:560px}}
 @media (max-width:820px){
@@ -328,7 +321,7 @@ a.mailto-inline:hover{text-decoration:underline}
 .wave.drive i{animation:none;transition:transform .07s linear}
 .live-body .tx{max-height:300px;overflow-y:auto}
 .stage .persona a,.stage .alert a{color:var(--c-text);text-decoration:underline;text-decoration-color:var(--c-border-strong);text-underline-offset:3px}
-.stage .go .btn:focus-visible,.biz button:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px}
+.stage .go .btn:focus-visible,.biz>button:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px}
 /* legal pages: tables */
 .doc .tbl{margin:4px 0 18px;overflow-x:auto;border:1px solid var(--c-border);border-radius:var(--r-md)}
 .doc table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:22px}
@@ -355,3 +348,26 @@ a.mailto-inline:hover{text-decoration:underline}
 @media (max-width:820px){.stage .consent{font-size:15px}}
 
 .custom .cterms{display:block;margin-top:8px;font-size:13px;line-height:20px;color:var(--c-muted)}
+
+/* demo picker on phones: an accordion with the stage inline under the chosen business */
+@media (max-width:767px){
+  .biz{border-bottom:0}
+  .biz>button{grid-template-columns:20px 1fr 16px}
+  .biz>button::after{content:"";align-self:center;justify-self:center;width:8px;height:8px;margin-top:-4px;border-right:1.5px solid var(--c-muted);border-bottom:1.5px solid var(--c-muted);transform:rotate(45deg);transition:transform .22s ease-out}
+  .biz>button[aria-expanded=true]::after{transform:translateY(4px) rotate(225deg)}
+  .biz>button:active{background:var(--c-surface-2);transition:none}
+  .biz>button[aria-pressed=true]{border-color:rgba(134,209,236,.4)}
+  .biz>button[aria-pressed=true] .r{border-color:var(--c-accent);background:var(--c-accent)}
+  .biz>button[aria-expanded=true]{padding-bottom:10px;border-bottom-color:transparent;border-radius:var(--r-md) var(--r-md) 0 0}
+  .biz .stage{padding:0 16px 16px;background:var(--c-surface-2);border:1px solid rgba(134,209,236,.4);border-top:0;border-radius:0 0 var(--r-md) var(--r-md)}
+  .biz .stage .persona{margin-top:6px;font-size:15px;line-height:21px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .biz .stage .go{margin-top:12px}.biz .stage .greet{margin-top:16px}
+  .biz .stage .greet{background:var(--c-surface)}
+  .biz .stage .limit{text-align:center}
+  .biz .stage:is([data-view=idle],[data-view=mic],[data-view=unsupported],[data-view=connecting],[data-view=live],[data-view=ended]) h3{display:none}
+  .biz .stage .chip{white-space:nowrap}
+  .biz .stage:is([data-view=idle],[data-view=mic],[data-view=unsupported]) .meta>span:not(.chip){display:none}
+  .biz .stage:is([data-view=idle],[data-view=mic],[data-view=unsupported]) :is(.persona,.go,.alert,.greet,.note,.elfoot){order:var(--o)}
+  .biz .stage .persona{--o:1}.biz .stage .go,.biz .stage .alert{--o:2}.biz .stage .greet{--o:3}.biz .stage .note{--o:4}.biz .stage .elfoot{--o:5}
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce){.biz>button::after{transition:none}}
