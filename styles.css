@@ -413,3 +413,7 @@ footer .r div{gap:0}
 footer .r b{margin-bottom:0}
 footer .r a{display:block;line-height:44px}
 .facts b{white-space:nowrap}
+html.menu-open nav{background:#0B0D10;backdrop-filter:none;-webkit-backdrop-filter:none}
+nav .right>.btn{transition:opacity .18s,visibility 0s}
+html.menu-open nav .right>.btn{opacity:0;visibility:hidden;transition:opacity .18s,visibility 0s .18s}
+@media (prefers-reduced-motion:reduce){nav .right>.btn,html.menu-open nav .right>.btn{transition:none}}
