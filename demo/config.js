@@ -19,6 +19,7 @@ export default {
     roofing: "agent_6901m60gqn2perga64q618869665",
     medspa: "agent_7101m60gqpbnfcxt0h03n51hb73d",
     law: "agent_4001m60gqqkdeq0r8krhteq6wn33",
+    realestate: "agent_1901m62f8pw4fm7926yc97fb7det",
   },
 
   // Must match max_duration_seconds on each agent.

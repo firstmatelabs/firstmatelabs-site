@@ -10,6 +10,7 @@ const BIZ = [
   { key: "roofing", name: "Cedar Line Roofing", persona: "Direct and unhurried. Separates leaks and storm damage from planned replacements and books an estimate.", greet: "Cedar Line Roofing, this is the demo assistant. Are you dealing with a leak right now, or planning a new roof?" },
   { key: "medspa", health: true, name: "Juniper Skin & Wellness", persona: "Warm and low-pressure. Books consultations, explains treatments in general terms and gives no medical advice.", greet: "Welcome to Juniper Skin and Wellness. I'm an AI assistant for this demo. Would you like to book a consultation, or ask about a treatment?" },
   { key: "law", name: "Halden Law Group", persona: "Formal intake. Collects the caller's details and the type of matter, gives no legal advice and offers a consultation.", greet: "Halden Law Group. I'm an AI assistant in a demo, and I can't give legal advice. I can take your details and set up a consultation. What is this regarding?" },
+  { key: "realestate", name: "Larkspur Home Realty", persona: "A warm, upbeat office assistant. Answers questions about listings, books showings, takes requests for home valuations, and passes serious buyers and sellers to an agent.", greet: "Thanks for calling Larkspur Home Realty. I'm the office's AI assistant, and this is a demo. Are you looking to buy, sell, or ask about one of our listings?" },
 ];
 
 const stage = document.getElementById("demo-stage");
