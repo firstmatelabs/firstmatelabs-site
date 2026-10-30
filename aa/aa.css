@@ -117,3 +117,10 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 @media (min-width:768px){.badges{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}h2{font-size:40px}.vcard{padding:32px}.panel{padding:32px;max-width:720px}.foot-in{grid-template-columns:2fr 1fr}.steps{grid-template-columns:repeat(3,1fr)}section{padding:80px 0}}
 @media (min-width:900px){body{padding-bottom:0}.hero{min-height:0}.callbar{display:none}.hero-in{flex-direction:row;align-items:center;gap:24px}.truck{width:44%;max-width:520px;margin:0}h1{font-size:72px}.hero{padding:88px 0 104px}.sub{font-size:20px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.kicker .dot,.mic::after{animation:none}.callbar{transition:none}}
+/* designer fixes 360-412 */
+.hk .k1,.hk .open{white-space:nowrap}
+.hk .dot{margin:0 8px 0 2px}
+@media (min-width:420px){.hk .open .dot{display:none}.hk .k1::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--live);margin-right:8px;vertical-align:1px;animation:ping 2s infinite}}
+@media (min-width:420px) and (prefers-reduced-motion:reduce){.hk .k1::before{animation:none}}
+@media (max-width:599px){.btn .mono,.callbar .mono,.person .mono,.vnote .mono{font-family:var(--body);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:0}.hero{min-height:0;padding-top:24px}.truck{width:60%;max-width:220px;margin:16px auto}}
+@media (max-width:419px){.hk .k1,.hk .open{display:block}.hk .sep{display:none}.hk .open{margin-top:4px}}
