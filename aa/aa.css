@@ -1,5 +1,6 @@
+@font-face{font-family:"Archivo Fallback";src:local("Roboto Condensed"),local("Arial Narrow"),local("Roboto"),local("Arial");size-adjust:96%}
 :root{--bg:#0E0F11;--panel:#17191C;--line:#2A2D32;--y:#FFC400;--yh:#FFAB00;--tx:#F5F5F2;--mu:#A3A7AE;--live:#2EE58A;--alert:#FF5A36;--light:#F4F2EC;
---head:"Archivo","Archivo Narrow","Arial Narrow",system-ui,sans-serif;--body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--mono:"JetBrains Mono","Geist Mono",ui-monospace,Menlo,Consolas,monospace;
+--head:"Archivo","Archivo Fallback",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,"Roboto Mono","Droid Sans Mono",monospace;
 --hz:repeating-linear-gradient(-45deg,var(--y) 0 12px,#0E0F11 12px 24px)}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:72px;-webkit-text-size-adjust:100%}
@@ -31,9 +32,9 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 .call-top{padding:0 16px;font-size:15px}
 .call-top .lbl{display:none}
 /* hero */
-.hero{position:relative;padding:48px 0 64px;overflow:hidden;background:radial-gradient(120% 80% at 80% 0,#1A1C20 0,var(--bg) 60%)}
+.hero{position:relative;display:flex;flex-direction:column;justify-content:center;min-height:calc(100vh - 64px);min-height:calc(100svh - 64px);padding:40px 0 56px;overflow:hidden;background:radial-gradient(120% 80% at 80% 0,#1A1C20 0,var(--bg) 60%)}
 .lanes{position:absolute;inset:0;width:100%;height:100%;stroke:#2A2D32;stroke-width:3;stroke-dasharray:40 30;fill:none}
-.hero-in{position:relative;display:flex;align-items:center;gap:24px}
+.hero-in{position:relative;width:100%;display:flex;flex-direction:column;gap:0}
 .hero-copy{flex:1;min-width:0}
 .kicker .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--live);margin-right:8px;vertical-align:1px;box-shadow:0 0 0 0 rgba(46,229,138,.6);animation:ping 2s infinite}
 .kicker .open{color:var(--live);white-space:nowrap}
@@ -41,7 +42,8 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 .sub{color:var(--mu);font-size:18px;max-width:34ch;margin:18px 0 28px}
 .cta{display:flex;flex-direction:column;gap:12px}
 .cta .btn{width:100%}
-.truck{display:none;width:44%;max-width:520px;flex:none}
+.truck{display:block;width:72%;max-width:300px;flex:none;margin:36px auto 0;opacity:.9}
+@media (max-height:700px) and (max-width:899px){.truck{display:none}}
 .hazard{position:absolute;left:0;right:0;bottom:0;height:8px;background:var(--hz)}
 @keyframes ping{0%{box-shadow:0 0 0 0 rgba(46,229,138,.6)}80%,100%{box-shadow:0 0 0 8px rgba(46,229,138,0)}}
 /* trust */
@@ -52,7 +54,7 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 /* voice */
 .vcard{background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--y);border-radius:10px;padding:24px 20px}
 .vrow{display:flex;align-items:center;gap:20px}
-.mic{position:relative;flex:none;width:88px;height:88px;border-radius:50%;border:0;background:var(--y);color:#0E0F11;display:grid;place-items:center;cursor:pointer}
+.mic{position:relative;flex:none;touch-action:manipulation;width:88px;height:88px;border-radius:50%;border:0;background:var(--y);color:#0E0F11;display:grid;place-items:center;cursor:pointer}
 .mic svg{width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .mic::after{content:"";position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 0 rgba(255,196,0,.45);animation:ring 2.2s infinite}
 .mic:hover{background:var(--yh)}
@@ -68,7 +70,7 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 .vstage h3{margin-bottom:10px;font-size:22px}
 .vfoot{color:var(--mu);font-size:13px;margin-top:20px;padding-top:14px;border-top:1px solid var(--line)}
 .vfoot+.lk,.lk{display:flex;flex-wrap:wrap;gap:0 20px;font-size:13px}
-.lk a{color:var(--tx);display:inline-flex;align-items:center;min-height:44px}
+.lk a{color:var(--tx);display:inline-flex;align-items:center;min-height:48px}
 .person{margin-top:16px;color:var(--mu)}
 .person a{color:var(--y);font-weight:600;display:inline-flex;align-items:center;gap:6px;min-height:48px}
 /* services */
@@ -101,10 +103,10 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 .foot-in{display:grid;gap:28px}
 .foot p{color:var(--mu);margin-bottom:6px}
 .foot .mark{font-size:26px;color:var(--tx);margin-bottom:14px}
-.foot a{color:var(--tx);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.foot a{color:var(--tx);text-decoration:none;display:inline-flex;align-items:center;min-height:48px}
 .foot a:hover{color:var(--y)}
 .ql{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
-.ql a{min-height:44px;display:flex;align-items:center}
+.ql a{min-height:48px;display:flex;align-items:center}
 .foot .demo{text-align:center;font-size:12px;color:#6E727A;margin:32px 0 0}
 /* sticky call bar */
 .callbar{position:fixed;left:0;right:0;bottom:0;z-index:30;height:60px;padding-bottom:env(safe-area-inset-bottom);display:flex;align-items:center;justify-content:center;gap:6px;background:var(--y);color:#0E0F11;font:700 16px var(--body);text-decoration:none;white-space:nowrap;transform:translateY(110%);transition:transform .2s}
@@ -113,5 +115,5 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 @media (max-width:359px){.callbar{font-size:14px}.mark{font-size:19px}.call-top{padding:0 12px;font-size:14px}h1{font-size:36px}.vrow{gap:14px}.mic{width:76px;height:76px}}
 @media (min-width:560px){.call-top .lbl{display:inline}.cta{flex-direction:row}.cta .btn,.pm .btn,.release .btn{width:auto}}
 @media (min-width:768px){.badges{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}h2{font-size:40px}.vcard{padding:32px}.panel{padding:32px;max-width:720px}.foot-in{grid-template-columns:2fr 1fr}.steps{grid-template-columns:repeat(3,1fr)}section{padding:80px 0}}
-@media (min-width:900px){body{padding-bottom:0}.callbar{display:none}.truck{display:block}h1{font-size:72px}.hero{padding:88px 0 104px}.sub{font-size:20px}}
+@media (min-width:900px){body{padding-bottom:0}.hero{min-height:0}.callbar{display:none}.hero-in{flex-direction:row;align-items:center;gap:24px}.truck{width:44%;max-width:520px;margin:0}h1{font-size:72px}.hero{padding:88px 0 104px}.sub{font-size:20px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.kicker .dot,.mic::after{animation:none}.callbar{transition:none}}
