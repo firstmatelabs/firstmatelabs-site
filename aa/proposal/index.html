@@ -338,6 +338,7 @@
 </tbody>
 </table>
 <div class="sash" aria-hidden="true"><span>Let&rsquo;s talk</span></div>
+<div class="sash s2" aria-hidden="true"><span>Let&rsquo;s talk</span></div>
 </div>
 <p class="opt"><b>Optional:</b> The A&amp;A app (section 11). Pricing to be discussed once we've scoped it together. Google Local Services Ads management, <span class="mono nowrap"><span class="rdx" aria-hidden="true"><span>000/mo</span></span></span> plus ad spend paid to Google. Google Workspace licenses are billed by Google per user, and card processing fees for online payments are charged by the payment processor.</p>
 </div>
@@ -379,6 +380,6 @@
 <p><span class="fml">First Mate Labs</span> · prepared for A&amp;A Towing · October 30, 2026</p>
 </div>
 </footer>
-<script>(()=>{const w=document.querySelector(".redact"),s=w&&w.querySelector(".sash");if(!s)return;const f=()=>{const r=w.getBoundingClientRect();s.style.setProperty("--ang",-Math.atan2(r.height,r.width)+"rad");s.style.setProperty("--len",Math.hypot(r.width,r.height)+120+"px")};f();new ResizeObserver(f).observe(w)})()</script>
+<script>(()=>{const w=document.querySelector(".redact");if(!w)return;const [a,b]=w.querySelectorAll(".sash"),m=matchMedia("(max-width:599px)");const f=()=>{const r=w.getBoundingClientRect();if(m.matches){const t=30*Math.PI/180,l=r.width/Math.cos(t)+120+"px";a.style.setProperty("--ang","-30deg");a.style.setProperty("--len",l);a.style.removeProperty("--top");const c=[...w.querySelectorAll("tbody tr:last-child td.num")];if(c.length){const y=(c[0].getBoundingClientRect().top+c[c.length-1].getBoundingClientRect().bottom)/2-r.top;b.style.setProperty("--top",y+"px");b.style.setProperty("--len",l)}}else{a.style.setProperty("--ang",-Math.atan2(r.height,r.width)+"rad");a.style.setProperty("--len",Math.hypot(r.width,r.height)+120+"px")}};f();new ResizeObserver(f).observe(w);m.addEventListener("change",f)})()</script>
 </body>
 </html>
