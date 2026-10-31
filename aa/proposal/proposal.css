@@ -129,5 +129,4 @@ h1{font-size:56px}h2{font-size:40px}h3{font-size:24px}
 /* section 11 app */
 .app .up ul{margin:0}
 .app .up li{font-size:16px;margin-bottom:8px}
-.inv{background:rgba(255,196,0,.08);border:1px dashed var(--y);border-radius:10px;padding:12px 16px;margin-bottom:16px}
 .plate{background:var(--y);color:#0E0F11;padding:1px 8px;border-radius:4px;letter-spacing:.06em;white-space:nowrap}
