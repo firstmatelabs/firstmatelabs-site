@@ -35,7 +35,7 @@ const row = (btn, note) => `<div class="vrow">${btn}<div><p class="vline">${LINE
 const micBtn = (act, label, extra = "") => `<button class="mic ${extra}" type="button" data-act="${act}" aria-label="${label}">${extra === "live" ? STOP : MIC}</button>`;
 
 const VIEWS = {
-  idle: () => row(micBtn("start", "Start talking to Jenna, the dispatcher"), "Talk to Jenna, our 24/7 dispatcher. Tap the mic. Your browser will ask to use your microphone. Calls end after 3 minutes."),
+  idle: () => row(micBtn("start", "Start talking to Mike, the dispatcher"), "Talk to Mike, our 24/7 dispatcher. Tap the mic. Your browser will ask to use your microphone. Calls end after 3 minutes."),
   consent: () => `<div class="consent" role="group" aria-label="Demo call consent"><h3>Before you start</h3><p>You're about to talk to an <strong>AI</strong>, not a person. Your voice is sent to ElevenLabs, and the call is <strong>transcribed</strong>. We keep the transcript for 30 days. Don't share personal, health or payment information. By clicking <strong>Start call</strong> you agree to this and confirm you are 18 or older.</p>
 <div class="go"><button class="btn yel big" type="button" data-act="consent-yes">Start call</button><button class="btn line big" type="button" data-act="consent-no">Cancel</button></div></div>`,
   mic: () => row(micBtn("", "Waiting for microphone").replace("<button", "<button disabled"), "Choose Allow in your browser's prompt."),
