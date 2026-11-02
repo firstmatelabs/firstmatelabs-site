@@ -132,5 +132,14 @@ if (box && stage && READY) {
   stage.addEventListener("click", (e) => actions[e.target.closest("[data-act]")?.dataset.act]?.());
   addEventListener("pagehide", () => conv?.endSession());
   show("idle");
+  // Hero "Talk to our dispatcher": scroll to the demo and open the consent step (href="#voice" is the no-JS fallback).
+  document.getElementById("hero-talk")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("voice")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (["idle", "ended", "error", "denied"].includes(stage.dataset.view)) {
+      show("consent");
+      stage.querySelector('[data-act="consent-yes"]')?.focus({ preventScroll: true });
+    }
+  });
 }
 // Without a real agent ID the static markup stays: mic disabled, "Dispatcher demo connecting soon."
