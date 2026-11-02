@@ -1,6 +1,34 @@
 // A&A Towing demo: voice dispatcher (same SDK and consent step as the firstmatelabs.com demo) and the mobile call bar.
 // The agent ID is set in index.html: <div id="voice-agent" data-agent-id="...">.
 
+// ---- visit log: page views and demo call start/end, sent to our own endpoint. No cookies, no form contents. ----
+const LOG_URL = "https://fml-visits.noisy-night-24ec.workers.dev/v";
+const store = (k, v) => { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch { return null; } };
+const VID = store("fml_vid") || (() => {
+  const id = crypto.randomUUID?.() || Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join("");
+  store("fml_vid", id);
+  return id;
+})();
+{
+  const q = new URLSearchParams(location.search);
+  const me = q.get("me");
+  if (me !== null) {
+    if (/^[a-z0-9]{8}$/.test(me)) store("fml_me", me);
+    q.delete("me");
+    const qs = q.toString();
+    history.replaceState(history.state, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+  }
+}
+function track(t, extra = {}) {
+  const body = JSON.stringify({ t, p: location.pathname, v: VID, me: store("fml_me") || undefined, r: t === "view" ? document.referrer || undefined : undefined, ...extra });
+  try {
+    fetch(LOG_URL, { method: "POST", body, keepalive: true, mode: "cors", headers: { "content-type": "text/plain" } }).catch(() => {});
+  } catch {
+    navigator.sendBeacon?.(LOG_URL, new Blob([body], { type: "text/plain" }));
+  }
+}
+track("view");
+
 // ---- sticky call bar: shown once the hero call button scrolls away ----
 const bar = document.getElementById("callbar");
 const heroCall = document.getElementById("hero-call");
@@ -32,6 +60,8 @@ let timer = null;
 let t0 = 0;
 let vol = 0.5;
 let muted = false;
+let convId = null;
+let callStarted = false;
 
 const row = (btn, note) => `<div class="vrow">${btn}<div><p class="vline">${LINE}</p><p class="vnote">${note}</p></div></div>`;
 const micBtn = (act, label, extra = "") => `<button class="mic ${extra}" type="button" data-act="${act}" aria-label="${label}">${extra === "live" ? STOP : MIC}</button>`;
@@ -89,15 +119,17 @@ async function begin() {
     sdk ??= await import("../demo/vendor/elevenlabs-client.js");
     const session = await sdk.Conversation.startSession({
       agentId: AGENT_ID,
+      userId: VID,
       connectionType: "webrtc",
       libsampleratePath: new URL("../demo/vendor/libsamplerate.worklet.js", import.meta.url).href,
-      onConnect: () => mine === attempt && live(),
+      onConnect: (c) => { if (mine !== attempt) return; convId = c?.conversationId || convId; live(); },
       onDisconnect: () => mine === attempt && ended(),
       onError: (m) => { if (mine === attempt && stage.dataset.view === "connecting") fail(m); },
     });
     clearTimeout(to);
     if (mine !== attempt) return session.endSession();
     conv = session;
+    convId ||= session.getId?.() || null;
     applyVol();
     if (stage.dataset.view === "connecting") live();
   } catch (e) {
@@ -111,6 +143,8 @@ function live() {
   show("live");
   applyVol();
   t0 = performance.now();
+  callStarted = true;
+  track("call_start", { c: convId || undefined });
   clearInterval(timer);
   timer = setInterval(() => {
     const sec = (performance.now() - t0) / 1000;
@@ -122,6 +156,9 @@ function live() {
 
 function ended() {
   clearInterval(timer);
+  if (callStarted) track("call_end", { c: convId || undefined, d: (performance.now() - t0) / 1000 });
+  callStarted = false;
+  convId = null;
   conv = null;
   attempt++;
   show("ended");
