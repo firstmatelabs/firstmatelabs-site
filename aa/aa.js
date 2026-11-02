@@ -30,6 +30,8 @@ let conv = null;
 let attempt = 0;
 let timer = null;
 let t0 = 0;
+let vol = 0.5;
+let muted = false;
 
 const row = (btn, note) => `<div class="vrow">${btn}<div><p class="vline">${LINE}</p><p class="vnote">${note}</p></div></div>`;
 const micBtn = (act, label, extra = "") => `<button class="mic ${extra}" type="button" data-act="${act}" aria-label="${label}">${extra === "live" ? STOP : MIC}</button>`;
@@ -40,7 +42,8 @@ const VIEWS = {
 <div class="go"><button class="btn yel big" type="button" data-act="consent-yes">Start call</button><button class="btn line big" type="button" data-act="consent-no">Cancel</button></div></div>`,
   mic: () => row(micBtn("", "Waiting for microphone").replace("<button", "<button disabled"), "Choose Allow in your browser's prompt."),
   connecting: () => row(micBtn("", "Connecting").replace("<button", "<button disabled"), "Connecting to the dispatcher…"),
-  live: () => row(micBtn("end", "End call", "live"), '<span class="ok">● Live</span> · <span class="mono" id="v-time">00:00</span> / 03:00 · tap to end'),
+  live: () => row(micBtn("end", "End call", "live"), '<span class="ok">● Live</span> · <span class="mono" id="v-time">00:00</span> / 03:00 · tap to end') +
+    `<div class="vvol"><label for="v-vol">Volume</label><input id="v-vol" type="range" min="0" max="1" step="0.05" value="${vol}"><button class="btn line vmute" type="button" data-act="mute" aria-pressed="${muted}">${muted ? "Unmute" : "Mute"}</button></div>`,
   denied: () => row(micBtn("start", "Try again"), '<span class="bad">Microphone blocked.</span> Allow the microphone in your browser settings, then tap the mic. Or call ' + TEL + "."),
   error: () => row(micBtn("start", "Retry"), '<span class="bad">The demo could not connect.</span> Try again, or call ' + TEL + "."),
   ended: () => row(micBtn("start", "Call again"), "Call ended. Tap the mic to talk again."),
@@ -51,6 +54,18 @@ function show(v) {
   stage.innerHTML = VIEWS[v]();
 }
 
+// Output volume: starts at 0.5 each call; mute sets 0 and restores the slider level.
+function applyVol() {
+  conv?.setVolume({ volume: muted ? 0 : vol });
+}
+
+function syncMute() {
+  const b = stage.querySelector('[data-act="mute"]');
+  if (!b) return;
+  b.textContent = muted ? "Unmute" : "Mute";
+  b.setAttribute("aria-pressed", String(muted));
+}
+
 const isDenied = (e) => /NotAllowedError|SecurityError|PermissionDenied/.test(`${e?.name} ${e?.message}`);
 const mmss = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
@@ -58,6 +73,8 @@ async function begin() {
   if (!READY) return;
   if (!navigator.mediaDevices?.getUserMedia) return show("error");
   const mine = ++attempt;
+  vol = 0.5;
+  muted = false;
   show("mic");
   try {
     const s = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -81,6 +98,7 @@ async function begin() {
     clearTimeout(to);
     if (mine !== attempt) return session.endSession();
     conv = session;
+    applyVol();
     if (stage.dataset.view === "connecting") live();
   } catch (e) {
     clearTimeout(to);
@@ -91,6 +109,7 @@ async function begin() {
 function live() {
   if (stage.dataset.view === "live") return;
   show("live");
+  applyVol();
   t0 = performance.now();
   clearInterval(timer);
   timer = setInterval(() => {
@@ -126,10 +145,18 @@ const actions = {
   "consent-yes": begin,
   "consent-no": () => show("idle"),
   end,
+  mute: () => { muted = !muted; applyVol(); syncMute(); },
 };
 
 if (box && stage && READY) {
   stage.addEventListener("click", (e) => actions[e.target.closest("[data-act]")?.dataset.act]?.());
+  stage.addEventListener("input", (e) => {
+    if (e.target.id !== "v-vol") return;
+    vol = Number(e.target.value);
+    muted = false;
+    applyVol();
+    syncMute();
+  });
   addEventListener("pagehide", () => conv?.endSession());
   show("idle");
   // Hero "Talk to our dispatcher": scroll to the demo and open the consent step (href="#voice" is the no-JS fallback).

@@ -65,6 +65,10 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 .vline{font-size:18px;font-weight:500;line-height:1.4}
 .vnote{color:var(--mu);font-size:14px;margin-top:8px}
 .vnote .ok{color:var(--live)}.vnote .bad{color:var(--alert)}
+.vvol{display:flex;align-items:center;gap:14px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.vvol label{font-size:14px;font-weight:600;color:var(--mu)}
+.vvol input{flex:1;min-width:0;height:44px;margin:0;accent-color:var(--y);touch-action:manipulation;cursor:pointer}
+.vmute{flex:none;min-width:96px}
 .consent p{margin-bottom:12px;color:var(--tx)}
 .consent .go{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .vstage h3{margin-bottom:10px;font-size:22px}
