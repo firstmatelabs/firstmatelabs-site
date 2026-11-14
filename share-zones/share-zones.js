@@ -1,5 +1,7 @@
 import { strings as S } from "./strings.js";
 import { enhanceEmailCopies } from "../copy-email.js";
+import { renderSecurityCheck } from "./security.js";
+import { renderHeroDiscord, discordCard } from "./discord.js";
 import { processFile, formatBytes, MATCH_RE, TIMESTAMP_LENGTH, stripLine } from "./strip.js";
 
 // Preview Worker only. firstmatelabs.com is not on the allowlist.
@@ -183,11 +185,9 @@ function renderFaq() {
     d.append(s, p);
     root.append(d);
   }
-  const code = document.createElement("a");
-  code.className = "read-code";
-  code.href = "strip.js";
+  const code = $("#read-code");
+  code.href = S.scriptUrl;
   code.textContent = S.readTheCode;
-  root.append(code);
 }
 
 function gameLabel(game) {
@@ -337,7 +337,7 @@ function renderDropIdle() {
   phone.className = "phone-note";
   phone.textContent = S.phoneNote;
 
-  wrap.append(renderSteps(), input, drop, fine, wifi, phone);
+  wrap.append(renderSteps(), renderSecurityCheck(), input, drop, fine, wifi, phone);
   root.append(wrap);
 }
 
@@ -467,7 +467,8 @@ function renderThanks(n) {
   b.style.marginTop = "20px";
   b.textContent = S.sendAnother;
   b.addEventListener("click", renderDropIdle);
-  box.append(h, b);
+  const card = discordCard();
+  box.append(...(card ? [h, card, b] : [h, b]));
   root.append(box);
 }
 
@@ -539,6 +540,7 @@ function acceptPageDrops() {
 function boot() {
   acceptPageDrops();
   renderChrome();
+  renderHeroDiscord();
   renderClipCards();
   renderReceive();
   renderCollect();

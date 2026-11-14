@@ -177,3 +177,65 @@ nav .nav-email{text-align:right}
   .clip-card{max-width:150px}
   .clip-card+.clip-card,.clip-fan.reverse .clip-card{--dy:28px}
 }
+
+/* Security check: pill, popover (641px+) and bottom sheet (640px and below). */
+.sec{position:relative;display:flex;justify-content:flex-end;margin-bottom:12px;z-index:4}
+.sec-pill{position:relative;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 14px;border-radius:var(--r-pill);font-family:var(--font-sans);font-size:13px;font-weight:500;color:var(--c-text);background:rgba(134,209,236,.08);border:1px solid rgba(134,209,236,.35);box-shadow:0 0 0 1px rgba(134,209,236,.15),0 0 18px rgba(134,209,236,.18);cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s}
+.sec-pill svg{color:var(--c-accent);flex:none}
+.sec-pill:hover,.sec.open .sec-pill{background:rgba(134,209,236,.14);border-color:rgba(134,209,236,.6);box-shadow:0 0 0 1px rgba(134,209,236,.15),0 0 18px rgba(134,209,236,.28)}
+.sec-pill:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px}
+.sec-pill.pulse::after{content:"";position:absolute;inset:-1px;border-radius:inherit;border:1px solid var(--c-accent);pointer-events:none;animation:sec-pulse .9s cubic-bezier(.2,.7,.2,1) 1}
+@keyframes sec-pulse{from{transform:scale(1);opacity:.5}to{transform:scale(1.35);opacity:0}}
+.sec-pop{position:absolute;top:calc(100% + 10px);right:0;width:360px;max-width:calc(100vw - 40px);padding:20px;background:var(--c-surface);border:1px solid var(--c-border-strong);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(134,209,236,.06);
+  opacity:0;transform:translateY(-6px) scale(.98);transform-origin:calc(100% - 30px) 0;transition:opacity .12s ease-out,transform .12s ease-out}
+.sec.open .sec-pop{opacity:1;transform:none;transition-duration:.18s}
+.sec-pop::before{content:"";position:absolute;top:-1px;left:20px;right:20px;height:2px;background:var(--c-accent);opacity:.7}
+.sec-pop::after{content:"";position:absolute;top:-7px;right:24px;width:12px;height:12px;background:var(--c-surface);border-top:1px solid var(--c-border-strong);border-left:1px solid var(--c-border-strong);transform:rotate(45deg)}
+.sec-handle{display:none}
+.sec-x{position:absolute;top:10px;right:10px;width:28px;height:28px;display:grid;place-items:center;border:0;border-radius:var(--r-sm);background:transparent;color:var(--c-muted);cursor:pointer}
+.sec-x:hover{color:var(--c-text)}
+.sec-eyebrow{font-family:var(--font-mono);font-size:11px;line-height:16px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-accent);margin-bottom:8px}
+.sec-title{font-family:var(--font-display);font-weight:600;font-size:18px;line-height:24px;color:var(--c-text);margin:0 28px 16px 0}
+.sec-copy{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:40px;border:0;border-radius:10px;background:var(--c-accent);color:var(--c-bg);font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer}
+.sec-copy:hover{background:#9ddaf0}
+.sec-label{font-family:var(--font-mono);font-size:11px;line-height:16px;color:var(--c-muted);margin:16px 0 8px}
+.sec-chips{display:flex;flex-wrap:wrap;gap:8px}
+.sec-chip{display:inline-flex;align-items:center;height:30px;padding:0 12px;border:1px solid var(--c-border-strong);border-radius:var(--r-md);font-size:13px;color:var(--c-text-2)}
+.sec-chip:hover{border-color:rgba(134,209,236,.5);color:var(--c-text)}
+.sec-code{display:inline-block;margin-top:14px;font-size:12.5px;color:var(--c-muted);text-decoration:underline;text-underline-offset:3px}
+.sec-code:hover{color:var(--c-text)}
+.sec.as-sheet.open{z-index:30}
+.sec-backdrop{position:fixed;inset:0;z-index:20;background:rgba(8,9,10,.6);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.sec.as-sheet .sec-pop{position:fixed;z-index:21;top:auto;left:0;right:0;bottom:0;width:auto;max-width:none;border-radius:16px 16px 0 0;border-bottom:0;padding:20px 20px calc(20px + 12px + env(safe-area-inset-bottom));transform:translateY(100%);opacity:1;transition:transform .12s ease-out}
+.sec.as-sheet.open .sec-pop{transform:none;transition-duration:.22s}
+.sec.as-sheet .sec-pop::after{display:none}
+.sec.as-sheet .sec-handle{display:block;width:36px;height:4px;border-radius:var(--r-pill);background:var(--c-border-strong);margin:-8px auto 16px}
+.sec.as-sheet .sec-chips{display:grid;grid-template-columns:1fr 1fr}
+.sec.as-sheet .sec-chip{justify-content:center}
+@media (prefers-reduced-motion:reduce){
+  .sec-pill.pulse::after{animation:none}
+  .sec-pop,.sec.as-sheet .sec-pop{transition:none}
+}
+
+/* Discord beta invite: hero link, popover line, thank-you card. */
+.discord-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--c-accent)}
+.discord-link:hover span{text-decoration:underline;text-underline-offset:3px}
+.discord-link svg{flex:none}
+.discord-hero{margin-top:18px}
+.sec-discord{margin-top:16px;padding-top:14px;border-top:1px solid var(--c-border-strong);font-size:13px;line-height:20px;color:var(--c-text-2)}
+.sec-discord .discord-link{font-size:13px}
+.discord-card{position:relative;margin-top:20px;max-width:560px;padding:24px;background:var(--c-surface);border:1px solid var(--c-border-strong);border-radius:14px;animation:discord-in .22s ease-out .15s both}
+.discord-card::before{content:"";position:absolute;top:-1px;left:24px;right:24px;height:2px;background:var(--c-accent);opacity:.7}
+.discord-eyebrow{font-family:var(--font-mono);font-size:11px;line-height:16px;text-transform:uppercase;letter-spacing:.08em;color:var(--c-accent);margin-bottom:8px}
+.discord-title{font-family:var(--font-display);font-weight:600;font-size:20px;line-height:26px;color:var(--c-text);margin-bottom:8px}
+.discord-body{font-size:14px;line-height:1.55;color:var(--c-text-2);margin-bottom:18px}
+.discord-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:10px;background:var(--c-accent);color:var(--c-bg);font-size:15px;font-weight:600}
+.discord-btn:hover{background:#9ddaf0}
+.discord-btn:focus-visible{outline:2px solid var(--c-accent);outline-offset:2px}
+@keyframes discord-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.discord-card{animation:none}}
+@media (max-width:599px){
+  .discord-card{padding:20px}
+  .discord-card::before{left:20px;right:20px}
+  .discord-btn{display:flex;width:100%}
+}
