@@ -42,7 +42,7 @@ export const strings = {
   wifiLine: "Want proof? Turn off your Wi-Fi and drop the file. It still works, because it all happens in your browser.",
 
   countLine: (n, game) =>
-    `Found ${n.toLocaleString("en-US")} zone lines from Path of Exile ${game}. No chat, no names.`,
+    `Found ${n.toLocaleString("en-US")} zone lines from Path of Exile ${game}. Things like your character names and chat were stripped out.`,
   gameUnknown: "an unknown game",
   game1: "1",
   game2: "2",
@@ -125,7 +125,7 @@ export const strings = {
     "\"%USERPROFILE%\\Desktop\\poe2-zones.txt\" is the new file, on your Desktop. If you get \"The system cannot find the path specified\", your Desktop may be inside OneDrive. Change it to \"%USERPROFILE%\\OneDrive\\Desktop\\poe2-zones.txt\".",
   ],
   scriptDifference:
-    "One difference from the page: findstr keeps whole lines, so each line also has a couple of internal log numbers before the zone text. They're not personal. The page trims those off automatically when you drop the file in. And if you ever typed one of those three phrases in chat, that line would match too, so give the file a quick read first.",
+    "One difference from the page: findstr keeps whole lines, so each line also has a couple of internal log numbers before the zone text. They're just log counters, not names or chat. The page trims those off automatically when you drop the file in. And if you ever typed one of those three phrases in chat, that line would match too, so give the file a quick read first.",
   scriptDropNote:
     "Drop that file on the box above. The page strips it the same way. The raw findstr file is not accepted on its own if you send it without dropping it here first.",
   scriptCheckHeading: "Check it yourself",
