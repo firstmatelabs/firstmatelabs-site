@@ -1,6 +1,5 @@
 /* First Mate Labs · website tokens
-   Extends the First Mate app tokens (../first-mate/app/tokens.css). Same palette, dark only.
-   Website scale is larger than the app scale. No light theme. */
+   Same palette, dark only. Website scale is larger than the app scale. No light theme. */
 @font-face{font-family:"Inter Tight";src:url("fonts/InterTight-Variable.ttf") format("truetype");font-weight:100 900;font-display:swap}
 @font-face{font-family:"Inter";src:url("fonts/Inter-Variable.ttf") format("truetype");font-weight:100 900;font-display:swap}
 @font-face{font-family:"Geist Mono";src:url("fonts/GeistMono-Variable.ttf") format("truetype");font-weight:100 900;font-display:swap}
