@@ -14,12 +14,10 @@ a{color:inherit;text-decoration:none}
 .btn:hover{border-color:var(--c-text-2)}
 .btn.primary:hover{background:#9ddaf0;border-color:#9ddaf0}
 .btn[disabled]{background:var(--c-surface-2);border-color:var(--c-border-strong);color:var(--c-text-2);cursor:not-allowed}
-.btn.quiet{color:var(--c-text-2)}
 .btn.sm{height:32px;padding:0 10px;font-family:var(--font-mono);font-size:12px;font-weight:500}
 
 nav{position:sticky;top:0;z-index:5;background:rgba(8,9,10,0.9);border-bottom:1px solid var(--c-border)}
 nav .wrap{height:68px;display:flex;align-items:center;justify-content:space-between}
-nav .btn{height:38px;font-size:14px;padding:0 16px}
 
 main{padding-bottom:80px}
 .page-head{padding:72px 0 48px}
@@ -77,8 +75,7 @@ main{padding-bottom:80px}
 .lines li:hover{background:var(--c-hover)}
 .lines .n{color:var(--c-muted);text-align:right}
 .lines .t{color:var(--c-text);white-space:pre;overflow-wrap:anywhere}
-.line-actions{display:flex;gap:8px;margin:12px 0 20px}
-.send-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.send-row{margin-top:20px}
 .send-fine{margin-top:12px;font-size:var(--text-small);color:var(--c-muted)}
 .error{margin-top:12px;color:var(--c-danger);font-size:var(--text-small)}
 .thanks h3{font-family:var(--font-display);font-weight:600;font-size:26px;line-height:32px;margin-bottom:12px}
@@ -132,13 +129,9 @@ footer .fine{margin-top:20px;width:100%;padding-top:20px;border-top:1px solid va
   nav .wrap{height:60px}
 }
 
-/* Email + Copy in the nav must not overflow at 390. */
+/* Plain email text in the nav; it may wrap on very narrow screens. */
 nav .wrap{gap:12px}
-nav .email-copy{min-width:0;flex:1 1 auto}
-@media (max-width:599px){
-  nav .wrap{height:auto;min-height:60px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
-  nav .email-copy{flex:1 1 100%;justify-content:flex-end}
-}
+nav .nav-email{text-align:right}
 
 /* Clip cards: a fanned pair beside the intro, and a pair fanned the other way
    beside the drop zone. Each grid only switches on when its slot has cards. */
@@ -165,7 +158,7 @@ nav .email-copy{min-width:0;flex:1 1 auto}
 }
 @media (max-width:899px){
   .hero.has-cards{display:block}
-  .drop-split.has-cards{display:flex;flex-direction:column}
+  .drop-split.has-cards{display:flex;flex-direction:column;align-items:stretch}
   .clip-fan{max-width:300px;margin:28px auto 0}
   .drop-split .clip-fan{position:static;order:1;margin-top:40px}
   .clip-card{max-width:150px}

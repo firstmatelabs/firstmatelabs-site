@@ -21,7 +21,6 @@ nav .wrap{height:68px;display:flex;align-items:center;justify-content:space-betw
 nav ul{display:flex;gap:30px;list-style:none;font-size:14.5px;color:var(--c-text-2)}
 nav .right{display:flex;align-items:center;gap:20px}
 nav .tel{font-family:var(--font-mono);font-size:13.5px;color:var(--c-text-2)}
-nav .btn{height:38px;font-size:14px;padding:0 16px}
 /* hero */
 .hero{padding:96px 0 104px;border-top:0;position:relative;overflow:hidden}
 .hero .grid{display:grid;grid-template-columns:1.08fr 1fr;gap:72px;align-items:center;position:relative}
@@ -393,14 +392,18 @@ nav .navsheet ul{display:block;font-size:17px;color:var(--c-text)}
 .navsheet li a{display:flex;align-items:center;height:52px;font-weight:500;border-bottom:1px solid var(--c-border)}
 .navsheet .tel-row{display:flex;align-items:center;gap:12px;height:52px;font-family:var(--font-mono);font-size:15px;color:var(--c-text)}
 .navsheet .tel-row svg{flex:none;color:var(--c-accent)}
-nav .navsheet .btn{width:100%;height:48px;justify-content:center;font-size:15px;margin:6px 0 20px}
 html.menu-open{overflow:hidden}
 @media (max-width:1099px){
   nav>.wrap>ul,nav .right .tel{display:none}
   .menu-btn{display:block}
   nav .right{gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
   nav .wrap{height:auto;min-height:68px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px;gap:8px 16px}
-  nav .right .email-copy{flex:1 1 calc(100% - 52px);order:3;justify-content:flex-end}
+  nav .right .nav-email{text-align:right}
+}
+/* At phone widths the address gets its own full-width line under the logo row. */
+@media (max-width:599px){
+  nav .wrap{position:relative;flex-wrap:nowrap;padding-bottom:36px}
+  nav .right .nav-email{position:absolute;right:var(--gutter);bottom:12px;white-space:nowrap}
 }
 
 @media (min-width:1100px) and (max-width:1239px){nav .right .tel{display:none}}
@@ -413,17 +416,15 @@ html.menu-open{overflow:hidden}
 /* logo and header button: 44px hit areas */
 nav .wrap>a:first-child{padding-block:7px;margin-block:-7px}
 footer .l>a:first-child{display:block;width:fit-content;padding-block:9px;margin-block:-9px}
-nav .right .btn{position:relative}
-nav .right .btn::after{content:"";position:absolute;inset:-4px -1px}
-@media (max-width:359px){nav img{height:26px}nav .wrap>a:first-child{padding-block:9px;margin-block:-9px}nav .right .btn{padding:0 12px}}
+@media (max-width:359px){nav img{height:26px}nav .wrap>a:first-child{padding-block:9px;margin-block:-9px}}
 footer .r div{gap:0}
 footer .r b{margin-bottom:0}
 footer .r a{display:block;line-height:44px}
 .facts b{white-space:nowrap}
 html.menu-open nav{background:#0B0D10;backdrop-filter:none;-webkit-backdrop-filter:none}
-nav .right>.btn,nav .right>.email-copy{transition:opacity .18s,visibility 0s}
-html.menu-open nav .right>.btn,html.menu-open nav .right>.email-copy{opacity:0;visibility:hidden;transition:opacity .18s,visibility 0s .18s}
-@media (prefers-reduced-motion:reduce){nav .right>.btn,nav .right>.email-copy,html.menu-open nav .right>.btn,html.menu-open nav .right>.email-copy{transition:none}}
+nav .right>.nav-email{transition:opacity .18s,visibility 0s}
+html.menu-open nav .right>.nav-email{opacity:0;visibility:hidden;transition:opacity .18s,visibility 0s .18s}
+@media (prefers-reduced-motion:reduce){nav .right>.nav-email,html.menu-open nav .right>.nav-email{transition:none}}
 .navsheet{background:#0B0D10}
 
 footer .r .email-copy{display:flex;line-height:normal;padding:10px 0}

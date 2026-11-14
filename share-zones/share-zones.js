@@ -7,6 +7,7 @@ export const UPLOAD_URL = "https://fml-share-zones.noisy-night-24ec.workers.dev/
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const panel = () => $("#panel");
+let sending = false;
 
 function text(el, value) {
   if (el) el.textContent = value;
@@ -226,12 +227,8 @@ function renderDropIdle() {
   drop.addEventListener("dragenter", (e) => { e.preventDefault(); drop.classList.add("over"); });
   drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
   drop.addEventListener("dragleave", () => drop.classList.remove("over"));
-  drop.addEventListener("drop", (e) => {
-    e.preventDefault();
-    drop.classList.remove("over");
-    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
-    if (f) handleFile(f);
-  });
+  // The file itself is read by the page-wide drop handler in boot().
+  drop.addEventListener("drop", () => drop.classList.remove("over"));
   input.addEventListener("change", () => {
     const f = input.files && input.files[0];
     if (f) handleFile(f);
@@ -373,48 +370,15 @@ function renderPreview(result) {
   });
   listWrap.append(ol);
 
-  const actions = document.createElement("div");
-  actions.className = "line-actions";
-  const copy = document.createElement("button");
-  copy.type = "button";
-  copy.className = "btn sm";
-  copy.textContent = S.copyLines;
-  copy.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(result.body);
-      copy.textContent = S.copied;
-      setTimeout(() => { copy.textContent = S.copyLines; }, 1500);
-    } catch {}
-  });
-  const save = document.createElement("button");
-  save.type = "button";
-  save.className = "btn sm";
-  save.textContent = S.saveTxt;
-  save.addEventListener("click", () => {
-    const blob = new Blob([result.body], { type: "text/plain" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "zone-lines.txt";
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
-  actions.append(copy, save);
-
   const sendRow = document.createElement("div");
   sendRow.className = "send-row";
   const send = document.createElement("button");
   send.type = "button";
   send.className = "btn primary";
   send.id = "send-btn";
-  send.textContent = S.send(result.lines.length);
-  const clear = document.createElement("button");
-  clear.type = "button";
-  clear.className = "btn quiet";
-  clear.id = "clear-btn";
-  clear.textContent = S.clear;
-  clear.addEventListener("click", renderDropIdle);
-  send.addEventListener("click", () => sendLines(result, send, clear));
-  sendRow.append(send, clear);
+  send.textContent = S.send;
+  send.addEventListener("click", () => sendLines(result, send));
+  sendRow.append(send);
   const fine = document.createElement("p");
   fine.className = "send-fine";
   fine.textContent = S.previewFine;
@@ -424,7 +388,7 @@ function renderPreview(result) {
   err.hidden = true;
   err.textContent = S.sendError;
 
-  box.append(count, facts, size, lead, listWrap, actions, sendRow, fine, err);
+  box.append(count, facts, size, lead, listWrap, sendRow, fine, err);
   root.append(box);
 }
 
@@ -436,15 +400,13 @@ function renderThanks(n) {
   box.dataset.state = "sent";
   const h = document.createElement("h3");
   h.textContent = S.thanks(n);
-  const p = document.createElement("p");
-  p.textContent = S.thanksMore;
   const b = document.createElement("button");
   b.type = "button";
   b.className = "btn";
   b.style.marginTop = "20px";
   b.textContent = S.sendAnother;
   b.addEventListener("click", renderDropIdle);
-  box.append(h, p, b);
+  box.append(h, b);
   root.append(box);
 }
 
@@ -469,9 +431,9 @@ async function handleFile(file) {
   renderPreview(result);
 }
 
-function setSendingUi(send, clear, on, lineCount) {
+function setSendingUi(send, on) {
+  sending = on;
   send.disabled = on;
-  if (clear) clear.disabled = on;
   if (on) {
     send.replaceChildren();
     const wait = document.createElement("span");
@@ -479,14 +441,14 @@ function setSendingUi(send, clear, on, lineCount) {
     wait.setAttribute("aria-hidden", "true");
     send.append(wait, document.createTextNode(S.sending));
   } else {
-    send.textContent = S.send(lineCount);
+    send.textContent = S.send;
   }
 }
 
-async function sendLines(result, button, clear) {
+async function sendLines(result, button) {
   const err = $("#send-error");
   if (err) err.hidden = true;
-  setSendingUi(button, clear || $("#clear-btn"), true, result.lines.length);
+  setSendingUi(button, true);
   try {
     const res = await fetch(UPLOAD_URL, {
       method: "POST",
@@ -496,12 +458,25 @@ async function sendLines(result, button, clear) {
     if (!res.ok) throw new Error(String(res.status));
     renderThanks(result.lines.length);
   } catch {
-    setSendingUi(button, clear || $("#clear-btn"), false, result.lines.length);
+    setSendingUi(button, false);
     if (err) err.hidden = false;
   }
 }
 
+// A file dropped anywhere on the page replaces the current preview, since the
+// preview has no Cancel. Ignored while lines are being sent.
+function acceptPageDrops() {
+  document.addEventListener("dragover", (e) => e.preventDefault());
+  document.addEventListener("drop", (e) => {
+    e.preventDefault();
+    if (sending) return;
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+}
+
 function boot() {
+  acceptPageDrops();
   renderChrome();
   renderClipCards();
   renderReceive();
@@ -536,7 +511,7 @@ window.__shareZonesSetState = async function (name, opts = {}) {
     const demo = opts.result;
     renderPreview(demo);
     if (name === "sending") {
-      setSendingUi($("#send-btn"), $("#clear-btn"), true, demo.lines.length);
+      setSendingUi($("#send-btn"), true);
     }
     if (name === "send-failed") {
       const e = $("#send-error");

@@ -4,18 +4,15 @@
 .email-copy .email-addr{font-family:var(--font-mono);color:var(--c-text-2);overflow-wrap:anywhere}
 .email-copy .btn{cursor:pointer;flex:none}
 
-/* Nav: address in Geist Mono at --c-text-2; Copy uses the existing outline button. */
-nav .email-copy{justify-content:flex-end}
-nav .email-copy .email-addr{font-size:12.5px;color:var(--c-text-2)}
-nav .email-copy .btn{height:38px;padding:0 16px;font-size:14px;font-family:var(--font-sans);font-weight:500}
+/* Header: the address as plain text in Geist Mono at --c-text-2. No Copy button. */
+.nav-email,.navsheet-email{font-family:var(--font-mono);font-size:12.5px;color:var(--c-text-2);overflow-wrap:anywhere;min-width:0}
 
 .tier-email{margin-top:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:14.5px;line-height:22px;color:var(--c-text-2)}
 .tier-email-text{min-width:0;overflow-wrap:anywhere}
 .tier-email .email-addr{font-family:var(--font-mono);color:var(--c-text-2)}
 .custom .tier-email{grid-column:1/-1;margin-top:4px}
 
-.navsheet-email{margin:10px 0 20px}
-.navsheet-email .btn{height:38px}
+.navsheet-email{margin:14px 0 20px}
 
 footer .email-copy .email-addr{color:var(--c-text-2)}
 .cl .email-copy .email-addr{font-size:18px;color:var(--c-text)}

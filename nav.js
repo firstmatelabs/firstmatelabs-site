@@ -1,5 +1,5 @@
 // Menu below 1100px: a sheet under the sticky header, built from the inline nav links.
-import { enhanceEmailCopies } from "./copy-email.js";
+import "./copy-email.js"; // wires the email Copy buttons in the page body and footer
 
 (() => {
   const nav = document.querySelector("nav");
@@ -19,10 +19,9 @@ import { enhanceEmailCopies } from "./copy-email.js";
   if (tel) {
     html += `<a class="tel-row nowrap" href="${tel.getAttribute("href")}">${icon}${tel.textContent}</a>`;
   }
-  html += '<div class="navsheet-email" data-email="hello@firstmatelabs.com" data-variant="nav"></div></div>';
+  html += '<p class="navsheet-email">hello@firstmatelabs.com</p></div>';
   sheet.innerHTML = html;
   nav.append(sheet);
-  enhanceEmailCopies(sheet);
 
   const items = () => [btn, ...sheet.querySelectorAll("a, button")];
   const isOpen = () => btn.getAttribute("aria-expanded") === "true";
@@ -50,7 +49,6 @@ import { enhanceEmailCopies } from "./copy-email.js";
 
   btn.addEventListener("click", () => (isOpen() ? close() : open()));
   // A link closes the sheet first, so the page can scroll to the section.
-  // Copy is a button, so it does not close the sheet.
   sheet.addEventListener("click", (e) => { if (e.target.closest("a")) close(); });
   document.addEventListener("pointerdown", (e) => {
     if (isOpen() && !sheet.contains(e.target) && !btn.contains(e.target)) close();
