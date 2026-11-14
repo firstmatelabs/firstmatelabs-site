@@ -35,20 +35,46 @@ export function discordPopoverLine() {
   return p;
 }
 
+function inviteCard(cls, titleTag, title, paragraphs, note) {
+  const card = document.createElement("div");
+  card.className = "invite-card " + cls;
+  const eyebrow = document.createElement("p");
+  eyebrow.className = "invite-eyebrow";
+  eyebrow.textContent = S.discordEyebrow;
+  const h = document.createElement(titleTag);
+  h.className = "invite-title";
+  h.textContent = title;
+  card.append(eyebrow, h);
+  for (const text of paragraphs) {
+    const p = document.createElement("p");
+    p.className = "invite-body";
+    p.textContent = text;
+    card.append(p);
+  }
+  card.append(inviteLink("discord-btn", S.discordButton));
+  if (note) {
+    const n = document.createElement("p");
+    n.className = "invite-note";
+    n.textContent = note;
+    card.append(n);
+  }
+  return card;
+}
+
 // Featured card in the thank-you state.
 export function discordCard() {
   if (!DISCORD_INVITE) return null;
-  const card = document.createElement("div");
-  card.className = "discord-card";
-  const eyebrow = document.createElement("p");
-  eyebrow.className = "discord-eyebrow";
-  eyebrow.textContent = S.discordEyebrow;
-  const title = document.createElement("h4");
-  title.className = "discord-title";
-  title.textContent = S.discordTitle;
-  const body = document.createElement("p");
-  body.className = "discord-body";
-  body.textContent = S.discordBody;
-  card.append(eyebrow, title, body, inviteLink("discord-btn", S.discordButton));
-  return card;
+  return inviteCard("discord-card", "h4", S.discordTitle, [S.discordBody]);
+}
+
+// Always-visible beta section after the upload area. CSS hides it while
+// the thank-you card is on screen, so the invite isn't shown twice.
+export function renderBetaSection() {
+  const block = document.getElementById("beta-block");
+  if (!DISCORD_INVITE) {
+    block.remove();
+    return;
+  }
+  const card = inviteCard("beta-card", "h2", S.betaTitle, S.betaBody, S.betaNote);
+  block.querySelector(".wrap").append(card);
 }
