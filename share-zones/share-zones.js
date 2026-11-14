@@ -1,0 +1,566 @@
+import { strings as S } from "./strings.js";
+import { processFile, formatBytes, MATCH_RE, TIMESTAMP_LENGTH } from "./strip.js";
+
+// Preview Worker only. firstmatelabs.com is not on the allowlist.
+export const UPLOAD_URL = "https://fml-share-zones.noisy-night-24ec.workers.dev/";
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const panel = () => $("#panel");
+
+function text(el, value) {
+  if (el) el.textContent = value;
+}
+
+function annotatedLine(raw) {
+  const match = MATCH_RE.exec(raw);
+  const stamp = raw.slice(0, TIMESTAMP_LENGTH);
+  if (!match || !/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/.test(stamp)) {
+    const span = document.createElement("span");
+    span.className = "dim";
+    span.textContent = raw;
+    return span;
+  }
+  const mid = raw.slice(TIMESTAMP_LENGTH, match.index);
+  const wrap = document.createElement("span");
+  const keep1 = document.createElement("span");
+  keep1.className = "keep";
+  keep1.textContent = stamp;
+  const dim = document.createElement("span");
+  dim.className = "dim";
+  dim.textContent = mid;
+  const keep2 = document.createElement("span");
+  keep2.className = "keep";
+  keep2.textContent = match[0];
+  wrap.append(keep1, dim, keep2);
+  return wrap;
+}
+
+function labelsFor(kind) {
+  const box = document.createElement("div");
+  box.className = "field-labels";
+  const items = kind === "generating"
+    ? [S.labels.time, S.labels.level, S.labels.areaId, S.labels.seed]
+    : [S.labels.time, S.labels.check];
+  for (const name of items) {
+    const s = document.createElement("span");
+    s.textContent = name;
+    box.append(s);
+  }
+  return box;
+}
+
+function renderChrome() {
+  document.title = S.title;
+  const desc = document.querySelector('meta[name="description"]');
+  if (desc) desc.setAttribute("content", S.metaDescription);
+  text($(".page-head h1"), S.h1);
+  const lead = $(".page-head .lead");
+  lead.replaceChildren();
+  for (const p of S.intro) {
+    const el = document.createElement("p");
+    el.textContent = p;
+    lead.append(el);
+  }
+  text($("#receive-block h2"), S.receiveHeading);
+  text($("#collect-block h2"), S.collectHeading);
+  text($("#script-block h2"), S.scriptHeading);
+  text($("#faq-block h2"), S.faqHeading);
+  const footLinks = document.querySelectorAll("footer .links a");
+  if (footLinks[0]) {
+    footLinks[0].textContent = S.footerEmail;
+    footLinks[0].href = "mailto:" + S.footerEmail;
+  }
+  if (footLinks[1]) footLinks[1].textContent = S.footerPrivacy;
+  text($("footer .fine"), S.footerLegal);
+  const contact = $("nav .btn");
+  if (contact) contact.textContent = S.navContact;
+  const brand = $("nav .brand");
+  if (brand) brand.setAttribute("aria-label", S.navHome);
+}
+
+function renderReceive() {
+  const root = $("#receive");
+  root.replaceChildren();
+  const examples = [
+    { raw: S.receiveGeneratingRaw, sent: S.receiveGeneratingSent, kind: "generating" },
+    { raw: S.receiveTileRaw, sent: S.receiveTileSent, kind: "tile" },
+  ];
+  for (const ex of examples) {
+    const block = document.createElement("div");
+    block.className = "example";
+    const l1 = document.createElement("div");
+    l1.className = "ex-label";
+    l1.textContent = S.receiveRawLabel;
+    const raw = document.createElement("div");
+    raw.className = "ex-line";
+    raw.append(annotatedLine(ex.raw));
+    const l2 = document.createElement("div");
+    l2.className = "ex-label";
+    l2.style.marginTop = "16px";
+    l2.textContent = S.receiveSentLabel;
+    const sent = document.createElement("div");
+    sent.className = "ex-line";
+    const keep = document.createElement("span");
+    keep.className = "keep";
+    keep.textContent = ex.sent;
+    sent.append(keep);
+    block.append(l1, raw, l2, sent, labelsFor(ex.kind));
+    root.append(block);
+  }
+}
+
+function renderCollect() {
+  const root = $("#collect");
+  root.innerHTML = "";
+  const pair = document.createElement("div");
+  pair.className = "pair";
+  const items = [
+    [S.collectWhat, S.collectWhatBody],
+    [S.collectDont, S.collectDontBody],
+    [S.collectFor, S.collectForBody],
+  ];
+  items.forEach(([h, b], i) => {
+    const d = document.createElement("div");
+    if (i === 2) d.className = "span2";
+    const h3 = document.createElement("h3");
+    h3.textContent = h;
+    const p = document.createElement("p");
+    p.textContent = b;
+    d.append(h3, p);
+    if (i === 2) {
+      const note = document.createElement("p");
+      note.style.marginTop = "12px";
+      note.textContent = S.noCookies;
+      d.append(note);
+    }
+    pair.append(d);
+  });
+  root.append(pair);
+}
+
+function renderScript() {
+  const root = $("#script");
+  root.replaceChildren();
+  const intro = document.createElement("p");
+  intro.textContent = S.scriptIntro;
+  const how = document.createElement("p");
+  how.style.margin = "14px 0 18px";
+  how.textContent = S.scriptHow;
+
+  const tabs = document.createElement("div");
+  tabs.className = "tabs";
+  tabs.setAttribute("role", "tablist");
+  const preWrap = document.createElement("div");
+  preWrap.className = "script-block";
+  const pre = document.createElement("pre");
+  pre.id = "script-command";
+  const copy = document.createElement("button");
+  copy.type = "button";
+  copy.className = "btn sm";
+  copy.textContent = S.copyPath;
+
+  function showTab(tab) {
+    pre.textContent = tab.command;
+    for (const btn of tabs.querySelectorAll("button")) {
+      btn.setAttribute("aria-selected", String(btn.dataset.id === tab.id));
+    }
+  }
+  for (const tab of S.scriptTabs) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.dataset.id = tab.id;
+    btn.textContent = tab.label;
+    btn.setAttribute("role", "tab");
+    btn.addEventListener("click", () => showTab(tab));
+    tabs.append(btn);
+  }
+  copy.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(pre.textContent);
+      copy.textContent = S.copied;
+      setTimeout(() => { copy.textContent = S.copyPath; }, 1500);
+    } catch {}
+  });
+  preWrap.append(pre, copy);
+  showTab(S.scriptTabs[0]);
+
+  const explain = document.createElement("div");
+  explain.className = "script-explain";
+  const ph = document.createElement("h3");
+  ph.textContent = S.scriptPartsHeading;
+  const ul = document.createElement("ul");
+  for (const item of S.scriptParts) {
+    const li = document.createElement("li");
+    li.textContent = item;
+    ul.append(li);
+  }
+  const diff = document.createElement("p");
+  diff.style.marginTop = "16px";
+  diff.textContent = S.scriptDifference;
+  const dropNote = document.createElement("p");
+  dropNote.style.marginTop = "12px";
+  dropNote.textContent = S.scriptDropNote;
+  const ch = document.createElement("h3");
+  ch.textContent = S.scriptCheckHeading;
+  const check = document.createElement("p");
+  check.textContent = S.scriptCheck;
+  explain.append(ph, ul, diff, dropNote, ch, check);
+
+  root.append(intro, how, tabs, preWrap, explain);
+}
+
+function renderFaq() {
+  const root = $("#faq");
+  root.replaceChildren();
+  for (const item of S.faq) {
+    const d = document.createElement("details");
+    const s = document.createElement("summary");
+    s.textContent = item.q;
+    const p = document.createElement("p");
+    p.textContent = item.a;
+    d.append(s, p);
+    root.append(d);
+  }
+  const code = document.createElement("a");
+  code.className = "read-code";
+  code.href = "strip.js";
+  code.textContent = S.readTheCode;
+  root.append(code);
+}
+
+function gameLabel(game) {
+  if (game === "1") return S.game1;
+  if (game === "2") return S.game2;
+  if (game === "1 and 2") return S.gameBoth;
+  return S.gameUnknown;
+}
+
+function renderDropIdle() {
+  const root = panel();
+  root.replaceChildren();
+  const wrap = document.createElement("div");
+  wrap.className = "drop-wrap";
+  const input = document.createElement("input");
+  input.type = "file";
+  input.id = "file";
+  input.accept = ".txt,text/plain";
+  input.hidden = true;
+
+  const drop = document.createElement("div");
+  drop.className = "drop";
+  drop.tabIndex = 0;
+  drop.setAttribute("role", "button");
+  const h = document.createElement("h3");
+  h.textContent = S.dropLabel;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "btn primary";
+  btn.textContent = S.chooseFile;
+  drop.append(h, btn);
+  btn.addEventListener("click", (e) => { e.stopPropagation(); input.click(); });
+  drop.addEventListener("click", () => input.click());
+  drop.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); input.click(); }
+  });
+  drop.addEventListener("dragenter", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", (e) => {
+    e.preventDefault();
+    drop.classList.remove("over");
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  input.addEventListener("change", () => {
+    const f = input.files && input.files[0];
+    if (f) handleFile(f);
+  });
+
+  const fine = document.createElement("p");
+  fine.className = "drop-fine";
+  fine.textContent = S.dropFine;
+  const wifi = document.createElement("p");
+  wifi.className = "wifi";
+  wifi.textContent = S.wifiLine;
+
+  const paths = document.createElement("div");
+  paths.className = "paths";
+  const where = document.createElement("p");
+  where.className = "where";
+  where.textContent = S.whereToFind;
+  paths.append(where);
+  for (const p of S.paths) {
+    const row = document.createElement("div");
+    row.className = "path";
+    const mid = document.createElement("div");
+    const lbl = document.createElement("div");
+    lbl.className = "lbl";
+    lbl.textContent = p.label;
+    const code = document.createElement("code");
+    code.textContent = p.path;
+    mid.append(lbl, code);
+    const c = document.createElement("button");
+    c.type = "button";
+    c.className = "btn sm";
+    c.textContent = S.copyPath;
+    c.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(p.path);
+        c.textContent = S.copied;
+        setTimeout(() => { c.textContent = S.copyPath; }, 1500);
+      } catch {}
+    });
+    row.append(mid, c);
+    paths.append(row);
+  }
+
+  const phone = document.createElement("p");
+  phone.className = "phone-note";
+  phone.textContent = S.phoneNote;
+
+  wrap.append(input, drop, fine, wifi, paths, phone);
+  root.append(wrap);
+}
+
+function renderMessage(kind, message, extra) {
+  const root = panel();
+  root.replaceChildren();
+  const box = document.createElement("div");
+  box.className = "status";
+  box.dataset.state = kind;
+  const p = document.createElement("p");
+  p.textContent = message;
+  box.append(p);
+  if (kind === "reading") {
+    const hint = document.createElement("p");
+    hint.style.marginTop = "8px";
+    hint.textContent = S.readingHint;
+    const bar = document.createElement("div");
+    bar.className = "progress";
+    const i = document.createElement("i");
+    i.id = "read-bar";
+    bar.append(i);
+    box.append(hint, bar);
+  }
+  if (extra) box.append(extra);
+  if (kind === "wrong" || kind === "empty") {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn";
+    b.style.marginTop = "18px";
+    b.textContent = S.tryAgain;
+    b.addEventListener("click", renderDropIdle);
+    box.append(b);
+  }
+  root.append(box);
+}
+
+function renderPreview(result) {
+  const root = panel();
+  root.replaceChildren();
+  const box = document.createElement("div");
+  box.dataset.state = "preview";
+
+  const facts = document.createElement("div");
+  facts.className = "facts";
+  const items = [
+    [S.factLines, result.lines.length.toLocaleString("en-US")],
+    [S.factGame, "Path of Exile " + gameLabel(result.game)],
+    [S.factDates, result.dateRange ? S.dateRange(result.dateRange.from, result.dateRange.to) : S.dateRangeUnknown],
+  ];
+  for (const [k, v] of items) {
+    const d = document.createElement("div");
+    d.append(k);
+    const b = document.createElement("b");
+    b.textContent = v;
+    d.append(b);
+    facts.append(d);
+  }
+  const size = document.createElement("p");
+  size.className = "size-drop";
+  size.textContent = S.sizeDrop(formatBytes(result.readBytes), formatBytes(result.sendBytes));
+  const count = document.createElement("p");
+  count.textContent = S.countLine(result.lines.length, gameLabel(result.game));
+  count.style.marginBottom = "8px";
+  const lead = document.createElement("p");
+  lead.className = "preview-lead";
+  lead.textContent = S.previewLead;
+
+  const listWrap = document.createElement("div");
+  listWrap.className = "lines";
+  const ol = document.createElement("ol");
+  result.lines.forEach((line, idx) => {
+    const li = document.createElement("li");
+    const n = document.createElement("span");
+    n.className = "n";
+    n.textContent = String(idx + 1);
+    const t = document.createElement("span");
+    t.className = "t";
+    t.textContent = line;
+    li.append(n, t);
+    ol.append(li);
+  });
+  listWrap.append(ol);
+
+  const actions = document.createElement("div");
+  actions.className = "line-actions";
+  const copy = document.createElement("button");
+  copy.type = "button";
+  copy.className = "btn sm";
+  copy.textContent = S.copyLines;
+  copy.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(result.body);
+      copy.textContent = S.copied;
+      setTimeout(() => { copy.textContent = S.copyLines; }, 1500);
+    } catch {}
+  });
+  const save = document.createElement("button");
+  save.type = "button";
+  save.className = "btn sm";
+  save.textContent = S.saveTxt;
+  save.addEventListener("click", () => {
+    const blob = new Blob([result.body], { type: "text/plain" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "zone-lines.txt";
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  actions.append(copy, save);
+
+  const sendRow = document.createElement("div");
+  sendRow.className = "send-row";
+  const send = document.createElement("button");
+  send.type = "button";
+  send.className = "btn primary";
+  send.id = "send-btn";
+  send.textContent = S.send(result.lines.length);
+  const clear = document.createElement("button");
+  clear.type = "button";
+  clear.className = "btn quiet";
+  clear.textContent = S.clear;
+  clear.addEventListener("click", renderDropIdle);
+  send.addEventListener("click", () => sendLines(result, send));
+  sendRow.append(send, clear);
+  const fine = document.createElement("p");
+  fine.className = "send-fine";
+  fine.textContent = S.previewFine;
+  const err = document.createElement("p");
+  err.className = "error";
+  err.id = "send-error";
+  err.hidden = true;
+  err.textContent = S.sendError;
+
+  box.append(count, facts, size, lead, listWrap, actions, sendRow, fine, err);
+  root.append(box);
+}
+
+function renderThanks(n) {
+  const root = panel();
+  root.replaceChildren();
+  const box = document.createElement("div");
+  box.className = "thanks";
+  box.dataset.state = "sent";
+  const h = document.createElement("h3");
+  h.textContent = S.thanks(n);
+  const p = document.createElement("p");
+  p.textContent = S.thanksMore;
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "btn";
+  b.style.marginTop = "20px";
+  b.textContent = S.sendAnother;
+  b.addEventListener("click", renderDropIdle);
+  box.append(h, p, b);
+  root.append(box);
+}
+
+async function handleFile(file) {
+  renderMessage("reading", S.reading);
+  const bar = $("#read-bar");
+  const result = await processFile(file, {
+    onProgress(done, total) {
+      if (bar && total) bar.style.width = Math.round((done / total) * 100) + "%";
+    },
+  });
+  if (result.wrongFile) {
+    renderMessage("wrong", S.wrongFile);
+    return;
+  }
+  if (!result.lines.length) {
+    renderMessage("empty", S.nothingFound);
+    return;
+  }
+  renderPreview(result);
+}
+
+async function sendLines(result, button) {
+  const err = $("#send-error");
+  if (err) err.hidden = true;
+  button.disabled = true;
+  button.textContent = S.sending;
+  try {
+    const res = await fetch(UPLOAD_URL, {
+      method: "POST",
+      headers: { "content-type": "text/plain; charset=utf-8" },
+      body: result.body,
+    });
+    if (!res.ok) throw new Error(String(res.status));
+    renderThanks(result.lines.length);
+  } catch {
+    button.disabled = false;
+    button.textContent = S.send(result.lines.length);
+    if (err) err.hidden = false;
+  }
+}
+
+function boot() {
+  renderChrome();
+  renderReceive();
+  renderCollect();
+  renderScript();
+  renderFaq();
+  renderDropIdle();
+}
+
+// Used only for preview screenshots. Not shown on the page.
+window.__shareZonesSetState = async function (name, opts = {}) {
+  if (name === "empty") { renderDropIdle(); return; }
+  if (name === "drag-over") {
+    renderDropIdle();
+    const drop = panel().querySelector(".drop");
+    if (drop) drop.classList.add("over");
+    return;
+  }
+  if (name === "reading") { renderMessage("reading", S.reading); return; }
+  if (name === "nothing-found") { renderMessage("empty", S.nothingFound); return; }
+  if (name === "wrong-file") { renderMessage("wrong", S.wrongFile); return; }
+  if (name === "sending" || name === "preview" || name === "send-failed") {
+    const demo = opts.result || {
+      lines: [
+        S.receiveGeneratingSent,
+        S.receiveTileSent,
+      ],
+      body: S.receiveGeneratingSent + "\n" + S.receiveTileSent + "\n",
+      game: "1",
+      dateRange: { from: "2026/11/04 21:40:10", to: "2026/11/04 21:40:11" },
+      readBytes: 142 * 1024 * 1024,
+      sendBytes: 380 * 1024,
+    };
+    renderPreview(demo);
+    if (name === "sending") {
+      const b = $("#send-btn");
+      if (b) { b.disabled = true; b.textContent = S.sending; }
+    }
+    if (name === "send-failed") {
+      const e = $("#send-error");
+      if (e) e.hidden = false;
+    }
+    return;
+  }
+  if (name === "sent") { renderThanks(opts.n || 2); return; }
+  if (name === "phone-note") { renderDropIdle(); return; }
+};
+
+boot();
