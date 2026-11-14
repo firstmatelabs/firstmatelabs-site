@@ -1,5 +1,5 @@
 import { strings as S } from "./strings.js";
-import { processFile, formatBytes, MATCH_RE, TIMESTAMP_LENGTH } from "./strip.js";
+import { processFile, formatBytes, MATCH_RE, TIMESTAMP_LENGTH, stripLine } from "./strip.js";
 
 // Preview Worker only. firstmatelabs.com is not on the allowlist.
 export const UPLOAD_URL = "https://fml-share-zones.noisy-night-24ec.workers.dev/";
@@ -12,41 +12,40 @@ function text(el, value) {
 }
 
 function annotatedLine(raw) {
+  const sent = stripLine(raw);
   const match = MATCH_RE.exec(raw);
   const stamp = raw.slice(0, TIMESTAMP_LENGTH);
-  if (!match || !/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/.test(stamp)) {
+  const wrap = document.createElement("span");
+  if (!sent || !match || !/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/.test(stamp)) {
     const span = document.createElement("span");
     span.className = "dim";
     span.textContent = raw;
-    return span;
+    wrap.append(span);
+    return wrap;
   }
   const mid = raw.slice(TIMESTAMP_LENGTH, match.index);
-  const wrap = document.createElement("span");
+  const after = raw.slice(match.index + match[0].length);
   const keep1 = document.createElement("span");
   keep1.className = "keep";
   keep1.textContent = stamp;
-  const dim = document.createElement("span");
-  dim.className = "dim";
-  dim.textContent = mid;
+  wrap.append(keep1);
+  if (mid) {
+    const dim = document.createElement("span");
+    dim.className = "dim";
+    dim.textContent = mid;
+    wrap.append(dim);
+  }
   const keep2 = document.createElement("span");
   keep2.className = "keep";
   keep2.textContent = match[0];
-  wrap.append(keep1, dim, keep2);
-  return wrap;
-}
-
-function labelsFor(kind) {
-  const box = document.createElement("div");
-  box.className = "field-labels";
-  const items = kind === "generating"
-    ? [S.labels.time, S.labels.level, S.labels.areaId, S.labels.seed]
-    : [S.labels.time, S.labels.check];
-  for (const name of items) {
-    const s = document.createElement("span");
-    s.textContent = name;
-    box.append(s);
+  wrap.append(keep2);
+  if (after) {
+    const dim2 = document.createElement("span");
+    dim2.className = "dim";
+    dim2.textContent = after;
+    wrap.append(dim2);
   }
-  return box;
+  return wrap;
 }
 
 function renderChrome() {
@@ -63,7 +62,6 @@ function renderChrome() {
   }
   text($("#receive-block h2"), S.receiveHeading);
   text($("#collect-block h2"), S.collectHeading);
-  text($("#script-block h2"), S.scriptHeading);
   text($("#faq-block h2"), S.faqHeading);
   const footLinks = document.querySelectorAll("footer .links a");
   if (footLinks[0]) {
@@ -81,32 +79,18 @@ function renderChrome() {
 function renderReceive() {
   const root = $("#receive");
   root.replaceChildren();
-  const examples = [
-    { raw: S.receiveGeneratingRaw, sent: S.receiveGeneratingSent, kind: "generating" },
-    { raw: S.receiveTileRaw, sent: S.receiveTileSent, kind: "tile" },
-  ];
-  for (const ex of examples) {
-    const block = document.createElement("div");
-    block.className = "example";
-    const l1 = document.createElement("div");
-    l1.className = "ex-label";
-    l1.textContent = S.receiveRawLabel;
-    const raw = document.createElement("div");
-    raw.className = "ex-line";
-    raw.append(annotatedLine(ex.raw));
-    const l2 = document.createElement("div");
-    l2.className = "ex-label";
-    l2.style.marginTop = "16px";
-    l2.textContent = S.receiveSentLabel;
-    const sent = document.createElement("div");
-    sent.className = "ex-line";
-    const keep = document.createElement("span");
-    keep.className = "keep";
-    keep.textContent = ex.sent;
-    sent.append(keep);
-    block.append(l1, raw, l2, sent, labelsFor(ex.kind));
-    root.append(block);
+  const list = document.createElement("div");
+  list.className = "receive-lines";
+  for (const raw of [S.receiveGeneratingRaw, S.receiveTileRaw]) {
+    const line = document.createElement("div");
+    line.className = "ex-line";
+    line.append(annotatedLine(raw));
+    list.append(line);
   }
+  const caption = document.createElement("p");
+  caption.className = "receive-caption";
+  caption.textContent = S.receiveCaption;
+  root.append(list, caption);
 }
 
 function renderCollect() {
@@ -136,77 +120,6 @@ function renderCollect() {
     pair.append(d);
   });
   root.append(pair);
-}
-
-function renderScript() {
-  const root = $("#script");
-  root.replaceChildren();
-  const intro = document.createElement("p");
-  intro.textContent = S.scriptIntro;
-  const how = document.createElement("p");
-  how.style.margin = "14px 0 18px";
-  how.textContent = S.scriptHow;
-
-  const tabs = document.createElement("div");
-  tabs.className = "tabs";
-  tabs.setAttribute("role", "tablist");
-  const preWrap = document.createElement("div");
-  preWrap.className = "script-block";
-  const pre = document.createElement("pre");
-  pre.id = "script-command";
-  const copy = document.createElement("button");
-  copy.type = "button";
-  copy.className = "btn sm";
-  copy.textContent = S.copyPath;
-
-  function showTab(tab) {
-    pre.textContent = tab.command;
-    for (const btn of tabs.querySelectorAll("button")) {
-      btn.setAttribute("aria-selected", String(btn.dataset.id === tab.id));
-    }
-  }
-  for (const tab of S.scriptTabs) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.dataset.id = tab.id;
-    btn.textContent = tab.label;
-    btn.setAttribute("role", "tab");
-    btn.addEventListener("click", () => showTab(tab));
-    tabs.append(btn);
-  }
-  copy.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(pre.textContent);
-      copy.textContent = S.copied;
-      setTimeout(() => { copy.textContent = S.copyPath; }, 1500);
-    } catch {}
-  });
-  preWrap.append(pre, copy);
-  showTab(S.scriptTabs[0]);
-
-  const explain = document.createElement("div");
-  explain.className = "script-explain";
-  const ph = document.createElement("h3");
-  ph.textContent = S.scriptPartsHeading;
-  const ul = document.createElement("ul");
-  for (const item of S.scriptParts) {
-    const li = document.createElement("li");
-    li.textContent = item;
-    ul.append(li);
-  }
-  const diff = document.createElement("p");
-  diff.style.marginTop = "16px";
-  diff.textContent = S.scriptDifference;
-  const dropNote = document.createElement("p");
-  dropNote.style.marginTop = "12px";
-  dropNote.textContent = S.scriptDropNote;
-  const ch = document.createElement("h3");
-  ch.textContent = S.scriptCheckHeading;
-  const check = document.createElement("p");
-  check.textContent = S.scriptCheck;
-  explain.append(ph, ul, diff, dropNote, ch, check);
-
-  root.append(intro, how, tabs, preWrap, explain);
 }
 
 function renderFaq() {
@@ -544,7 +457,6 @@ function boot() {
   renderChrome();
   renderReceive();
   renderCollect();
-  renderScript();
   renderFaq();
   renderDropIdle();
 }
