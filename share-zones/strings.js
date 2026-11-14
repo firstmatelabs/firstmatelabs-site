@@ -4,7 +4,7 @@
 // and have no Marketing counterpart.
 
 // Discord invite for beta testers. Leave empty to hide every Discord link.
-export const DISCORD_INVITE = "";
+export const DISCORD_INVITE = "https://discord.gg/ATAS4eV3mj";
 
 export const strings = {
   title: "Help us build a better leveling overlay",
