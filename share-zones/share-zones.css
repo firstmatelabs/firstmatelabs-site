@@ -131,3 +131,11 @@ footer .fine{margin-top:20px;width:100%;padding-top:20px;border-top:1px solid va
   .phone-note{display:block}
   nav .wrap{height:60px}
 }
+
+/* Email + Copy in the nav must not overflow at 390. */
+nav .wrap{gap:12px}
+nav .email-copy{min-width:0;flex:1 1 auto}
+@media (max-width:599px){
+  nav .wrap{height:auto;min-height:60px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+  nav .email-copy{flex:1 1 100%;justify-content:flex-end}
+}

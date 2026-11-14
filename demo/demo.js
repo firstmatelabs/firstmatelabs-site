@@ -2,6 +2,7 @@
 // Everything is switched by config.js. With config.enabled false the page keeps its
 // static "Demo Opens Soon" button and the SDK is never loaded.
 import config from "./config.js";
+import { emailCopyHTML, enhanceEmailCopies } from "../copy-email.js";
 
 const EMAIL = "hello@firstmatelabs.com";
 const BIZ = [
@@ -28,7 +29,7 @@ const STOP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor
 
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const mmss = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
-const mail = `<a href="mailto:${EMAIL}">${EMAIL}</a>`;
+const mail = emailCopyHTML(EMAIL);
 
 let bizIdx = 0;
 let view = "idle";
@@ -50,7 +51,7 @@ const elfoot = (left = "Demo agents. Calls end after 3 minutes.") =>
 const LINKS = '<a class="inline" href="privacy/" target="_blank" rel="noopener">Privacy Policy</a> · <a class="inline" href="ai-voice-disclosure/" target="_blank" rel="noopener">AI and Voice Disclosure</a>';
 const note = (...rows) => `<div class="note">${rows.filter(Boolean).map(([icon, text]) => `<div>${icon}<span>${text}</span></div>`).join("")}</div>`;
 const startBtn = (label) => `<button class="btn primary big" type="button" data-act="start">${MIC}${label}</button>`;
-const emailBtn = (label, cls) => `<a class="btn ${cls}" href="mailto:${EMAIL}">${label}</a>`;
+const emailBtn = (_label, cls = "btn sm") => emailCopyHTML(EMAIL, cls.includes("sm") ? cls : "btn sm");
 const barsHTML = (n, h = 0.08) => `<i style="--h:${h}"></i>`.repeat(n);
 
 const TEMPLATES = {
@@ -118,6 +119,7 @@ function show(next) {
   place();
   const wave = stage.querySelector("[data-wave]");
   if (wave) wave.innerHTML = barsHTML(waveCount(wave));
+  enhanceEmailCopies(stage);
 }
 
 // On phones the one stage element sits right after the chosen business; elsewhere it stays beside the list.
@@ -239,11 +241,12 @@ function showEnded(kind, seconds) {
   stage.innerHTML = `<div class="meta">${fictional}<span class="endl">Call Ended</span></div><h3>${esc(b.name)}</h3>
 <div class="live-body one"><div class="wave still" aria-hidden="true" data-wave></div>${lines ? `<div class="tx" role="log">${lines}</div>` : ""}</div>
 <div class="alert end"><p>${ENDED[kind](b)}</p></div>
-<div class="callbar"><div class="timer">${mmss(sec)} <span>/ ${mmss(config.maxSeconds)}</span></div><div class="bar${kind === "cap" ? " w" : ""}"><i style="width:${Math.min(100, (sec / config.maxSeconds) * 100)}%"></i></div>${kind === "silence" ? "" : '<a class="btn" href="#contact">Contact Us</a>'}${startBtn("Call Again").replace('class="btn primary big"', 'class="btn primary"').replace(MIC, "")}</div>${elfoot()}`;
+<div class="callbar"><div class="timer">${mmss(sec)} <span>/ ${mmss(config.maxSeconds)}</span></div><div class="bar${kind === "cap" ? " w" : ""}"><i style="width:${Math.min(100, (sec / config.maxSeconds) * 100)}%"></i></div>${kind === "silence" ? "" : emailCopyHTML(EMAIL)}${startBtn("Call Again").replace('class="btn primary big"', 'class="btn primary"').replace(MIC, "")}</div>${elfoot()}`;
   stage.querySelector(".tx .caret")?.remove();
   const wave = stage.querySelector("[data-wave]");
   wave.innerHTML = barsHTML(waveCount(wave));
   picks.forEach((p) => { p.disabled = false; p.classList.remove("dim"); });
+  enhanceEmailCopies(stage);
 }
 
 // ---- mic check, token and session ----

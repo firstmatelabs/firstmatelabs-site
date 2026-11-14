@@ -16,6 +16,7 @@
 <meta property="og:image" content="https://firstmatelabs.com/logo/og.png">
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="email-copy.css">
 </head>
 <body>
 <nav>
@@ -27,7 +28,7 @@
 <li><a href="#pricing">Pricing</a></li>
 <li><a href="#faq">FAQ</a></li>
 </ul>
-<div class="right"><a class="btn primary" href="#contact">Contact Us</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span></button></div></div>
+<div class="right"><span class="email-copy" data-email="hello@firstmatelabs.com" data-variant="nav"></span><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Menu"><span></span><span></span></button></div></div>
 </nav>
 <main>
 <header class="hero">
@@ -168,7 +169,7 @@
 <h2>One setup fee. One monthly price.</h2></div>
 <p>Prices are in US dollars. The monthly price covers the phone number, the voice platform and our support. There is no minimum term.</p></div>
 <div class="fine buy">
-<div><b>How to buy</b>Pick a plan and <a href="mailto:hello@firstmatelabs.com">email us</a>. We send a written plan and a Stripe invoice.</div>
+<div><b>How to buy</b>Pick a plan and <span class="email-copy" data-email="hello@firstmatelabs.com"></span>. We send a written plan and a Stripe invoice.</div>
 <div><b>How you pay</b>Prices in US dollars (USD). We invoice; card payments are processed securely by Stripe. Taxes are added where required.</div>
 <div><b>Who we sell to</b>Businesses only. We don't sell to consumers.</div></div>
 <div class="tiers">
@@ -187,7 +188,7 @@
 <li>Takes messages and sends each one by text and email</li>
 <li>Call transcripts and recordings</li>
 <li>Hand-off to a number you choose</li>
-</ul><a class="btn" href="mailto:hello@firstmatelabs.com?subject=Answer%20Package">Ask About Answer</a></div>
+</ul><p class="tier-email">Email <span class="email-addr">hello@firstmatelabs.com</span>, subject: Answer <button type="button" class="btn sm" data-copy-email="hello@firstmatelabs.com">Copy</button></p></div>
 <div class="tier mid">
 <div class="nm">
 <h3>Book</h3><span class="chip">Includes Booking</span></div>
@@ -203,7 +204,7 @@
 <li>Text confirmations and reminders</li>
 <li>Lead qualifying questions you write</li>
 <li>One round of changes each month</li>
-</ul><a class="btn primary" href="mailto:hello@firstmatelabs.com?subject=Book%20Package">Ask About Book</a></div>
+</ul><p class="tier-email">Email <span class="email-addr">hello@firstmatelabs.com</span>, subject: Book <button type="button" class="btn sm" data-copy-email="hello@firstmatelabs.com">Copy</button></p></div>
 <div class="tier">
 <div class="nm">
 <h3>Operate</h3></div>
@@ -219,11 +220,11 @@
 <li>Website chat on your site</li>
 <li>Review requests and missed-call follow-up</li>
 <li>Monthly call review and a written report</li>
-</ul><a class="btn" href="mailto:hello@firstmatelabs.com?subject=Operate%20Package">Ask About Operate</a></div></div>
+</ul><p class="tier-email">Email <span class="email-addr">hello@firstmatelabs.com</span>, subject: Operate <button type="button" class="btn sm" data-copy-email="hello@firstmatelabs.com">Copy</button></p></div></div>
 <div class="custom">
 <h3>Custom</h3>
 <p>Several locations, a CRM we have to integrate with, calls to your existing customers who have agreed to hear from you, or a workflow that isn't a phone call. We scope it, write it down and quote it before we start.<span class="cterms">Billing and renewal terms for custom plans are set in your written quote or order form.</span></p>
-<div><b>From $5,000</b><br><small class="mono">setup · monthly quoted</small></div><a class="btn" href="mailto:hello@firstmatelabs.com?subject=Custom%20Package">Describe Your Project</a></div>
+<div><b>From $5,000</b><br><small class="mono">setup · monthly quoted</small></div><p class="tier-email">Email <span class="email-addr">hello@firstmatelabs.com</span>, subject: Custom <button type="button" class="btn sm" data-copy-email="hello@firstmatelabs.com">Copy</button></p></div>
 <div class="fine">
 <div><b>What a minute is</b>One minute of connected call time. Calls under 5 seconds are free.</div>
 <div><b>What you pay for separately</b>Software you already use, such as your calendar or CRM, stays on your own account.</div>
@@ -276,9 +277,9 @@
 <div class="eyebrow"><i></i>Contact</div>
 <h2>Tell us what is taking up your week.</h2>
 <p class="lead">Send two or three lines about your business and what you want off your plate. We reply within one business day with questions or a rough price.</p>
-<div class="cta-row"><a class="btn primary big" href="mailto:hello@firstmatelabs.com">Email hello@firstmatelabs.com</a></div></div>
+<div class="cta-row"><span class="email-copy" data-email="hello@firstmatelabs.com"></span></div></div>
 <div class="cl">
-<div><span class="k">Email</span><span class="v m"><a href="mailto:hello@firstmatelabs.com">hello@<wbr>firstmatelabs.com</a></span></div>
+<div><span class="k">Email</span><span class="v m"><span class="email-copy" data-email="hello@firstmatelabs.com"></span></span></div>
 <div><span class="k">Company</span><span class="v">First Mate Labs LLC<small>30 North Gould Street, Suite 70227, Sheridan, WY 82801</small></span></div>
 <div><span class="k">Replies</span><span class="v">Within one business day</span></div></div></div></div>
 </section>
@@ -290,10 +291,10 @@
 <div class="r">
 <div><b>Pages</b><a href="#services">Services</a><a href="#demo">Voice Demo</a><a href="#pricing">Pricing</a><a href="#contact">Contact</a></div>
 <div><b>Legal</b><a href="terms/">Terms of Service</a><a href="privacy/">Privacy Policy</a><a href="refund/">Refund and Cancellation</a><a href="ai-voice-disclosure/">AI and Voice Disclosure</a></div>
-<div><b>Contact</b><a href="mailto:hello@firstmatelabs.com">hello@firstmatelabs.com</a></div></div>
+<div><b>Contact</b><span class="email-copy" data-email="hello@firstmatelabs.com"></span></div></div>
 <div class="fine2"><span>© 2026 First Mate Labs LLC. 30 North Gould Street, Suite 70227, Sheridan, WY 82801.</span><span>Demo businesses on this site are fictional.</span></div></div>
 </footer>
 <script type="module" src="demo/demo.js"></script>
-<script src="nav.js" defer></script>
+<script type="module" src="nav.js"></script>
 </body>
 </html>

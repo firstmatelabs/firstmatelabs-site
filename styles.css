@@ -395,7 +395,14 @@ nav .navsheet ul{display:block;font-size:17px;color:var(--c-text)}
 .navsheet .tel-row svg{flex:none;color:var(--c-accent)}
 nav .navsheet .btn{width:100%;height:48px;justify-content:center;font-size:15px;margin:6px 0 20px}
 html.menu-open{overflow:hidden}
-@media (max-width:1099px){nav>.wrap>ul,nav .right .tel{display:none}.menu-btn{display:block}nav .right{gap:8px}}
+@media (max-width:1099px){
+  nav>.wrap>ul,nav .right .tel{display:none}
+  .menu-btn{display:block}
+  nav .right{gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+  nav .wrap{height:auto;min-height:68px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px;gap:8px 16px}
+  nav .right .email-copy{flex:1 1 calc(100% - 52px);order:3;justify-content:flex-end}
+}
+
 @media (min-width:1100px) and (max-width:1239px){nav .right .tel{display:none}}
 @media (prefers-reduced-motion:reduce){.navsheet,.menu-btn span{transition:none}}
 /* tap targets: inline text links get a 44px hit area without moving the layout */
@@ -414,7 +421,9 @@ footer .r b{margin-bottom:0}
 footer .r a{display:block;line-height:44px}
 .facts b{white-space:nowrap}
 html.menu-open nav{background:#0B0D10;backdrop-filter:none;-webkit-backdrop-filter:none}
-nav .right>.btn{transition:opacity .18s,visibility 0s}
-html.menu-open nav .right>.btn{opacity:0;visibility:hidden;transition:opacity .18s,visibility 0s .18s}
-@media (prefers-reduced-motion:reduce){nav .right>.btn,html.menu-open nav .right>.btn{transition:none}}
+nav .right>.btn,nav .right>.email-copy{transition:opacity .18s,visibility 0s}
+html.menu-open nav .right>.btn,html.menu-open nav .right>.email-copy{opacity:0;visibility:hidden;transition:opacity .18s,visibility 0s .18s}
+@media (prefers-reduced-motion:reduce){nav .right>.btn,nav .right>.email-copy,html.menu-open nav .right>.btn,html.menu-open nav .right>.email-copy{transition:none}}
 .navsheet{background:#0B0D10}
+
+footer .r .email-copy{display:flex;line-height:normal;padding:10px 0}

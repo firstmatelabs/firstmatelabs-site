@@ -1,4 +1,5 @@
 import { strings as S } from "./strings.js";
+import { enhanceEmailCopies } from "../copy-email.js";
 import { processFile, formatBytes, MATCH_RE, TIMESTAMP_LENGTH, stripLine } from "./strip.js";
 
 // Preview Worker only. firstmatelabs.com is not on the allowlist.
@@ -64,16 +65,11 @@ function renderChrome() {
   text($("#collect-block h2"), S.collectHeading);
   text($("#faq-block h2"), S.faqHeading);
   const footLinks = document.querySelectorAll("footer .links a");
-  if (footLinks[0]) {
-    footLinks[0].textContent = S.footerEmail;
-    footLinks[0].href = "mailto:" + S.footerEmail;
-  }
-  if (footLinks[1]) footLinks[1].textContent = S.footerPrivacy;
+  if (footLinks[0]) footLinks[0].textContent = S.footerPrivacy;
   text($("footer .fine"), S.footerLegal);
-  const contact = $("nav .btn");
-  if (contact) contact.textContent = S.navContact;
   const brand = $("nav .brand");
   if (brand) brand.setAttribute("aria-label", S.navHome);
+  enhanceEmailCopies(document);
 }
 
 function renderReceive() {
