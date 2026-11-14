@@ -19,6 +19,7 @@ p{margin-bottom:14px}
 .btn.big{min-height:56px;font-size:17px;padding:0 26px}
 .btn.sm{padding:0 18px;font-size:15px}
 .yel{background:var(--y);color:#0E0F11}.yel:hover{background:var(--yh)}
+.line{border:2px solid var(--y);color:var(--y);background:transparent}.line:hover{background:rgba(255,196,0,.1)}
 a:focus-visible,.btn:focus-visible{outline:3px solid var(--y);outline-offset:3px}
 /* header */
 .top{position:sticky;top:0;z-index:20;background:rgba(14,15,17,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
@@ -137,3 +138,15 @@ h1{font-size:56px}h2{font-size:40px}h3{font-size:24px}
 .redact{position:relative}
 .pk-h{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
 .talk{display:inline-block;background:#FFC400;color:#0E0F11;font:900 18px/1 var(--head);letter-spacing:.02em;padding:8px 14px;border-radius:6px;transform:rotate(-4deg)}
+
+/* Visible email + Copy. A&A outline pill. */
+.email-copy,.tier-email{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;vertical-align:middle;max-width:100%;min-width:0;margin:0}
+.tier-email-text{min-width:0;overflow-wrap:anywhere}
+.email-copy .email-addr,.tier-email .email-addr{font-family:var(--mono);font-weight:500;color:var(--tx);overflow-wrap:anywhere}
+.email-copy .btn,.tier-email .btn{cursor:pointer;flex:none;min-height:40px;height:40px;padding:0 14px;font-size:14px}
+.contact .tier-email{margin:6px 0 28px}
+.meta .email-copy .btn{min-height:40px}
+@media (max-width:599px){
+  .top-in{flex-wrap:wrap;height:auto;min-height:64px;padding-top:8px;padding-bottom:8px}
+  .top-in .tier-email{flex:1 1 100%;justify-content:flex-end}
+}

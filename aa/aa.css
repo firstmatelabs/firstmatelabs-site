@@ -128,3 +128,10 @@ a.mark{display:inline-flex;align-items:center;min-height:48px}
 @media (min-width:420px) and (prefers-reduced-motion:reduce){.hk .k1::before{animation:none}}
 @media (max-width:599px){.btn .mono,.callbar .mono,.person .mono,.vnote .mono{font-family:var(--body);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:0}.hero{min-height:0;padding-top:24px}.truck{width:60%;max-width:220px;margin:16px auto}}
 @media (max-width:419px){.hk .k1,.hk .open{display:block}.hk .sep{display:none}.hk .open{margin-top:4px}}
+
+/* Visible email + Copy. Uses A&A colours and the outline pill. */
+.email-copy{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;vertical-align:middle;max-width:100%;min-width:0}
+.email-copy .email-addr{font-family:var(--mono);font-weight:500;color:var(--tx);overflow-wrap:anywhere}
+.email-copy .btn,.foot .email-copy .btn{cursor:pointer;flex:none;min-height:40px;height:40px;padding:0 14px;font-size:14px;border:2px solid var(--y);color:var(--y);background:transparent;border-radius:999px}
+.email-copy .btn:hover{background:rgba(255,196,0,.1)}
+.foot .email-copy{display:inline-flex}
