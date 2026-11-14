@@ -1,5 +1,6 @@
 import { strings as S } from "./strings.js";
 import { enhanceEmailCopies } from "../copy-email.js";
+import { renderSecurityCheck } from "./security.js";
 import { processFile, formatBytes, MATCH_RE, TIMESTAMP_LENGTH, stripLine } from "./strip.js";
 
 // Preview Worker only. firstmatelabs.com is not on the allowlist.
@@ -183,11 +184,9 @@ function renderFaq() {
     d.append(s, p);
     root.append(d);
   }
-  const code = document.createElement("a");
-  code.className = "read-code";
-  code.href = "strip.js";
+  const code = $("#read-code");
+  code.href = S.scriptUrl;
   code.textContent = S.readTheCode;
-  root.append(code);
 }
 
 function gameLabel(game) {
@@ -337,7 +336,7 @@ function renderDropIdle() {
   phone.className = "phone-note";
   phone.textContent = S.phoneNote;
 
-  wrap.append(renderSteps(), input, drop, fine, wifi, phone);
+  wrap.append(renderSteps(), renderSecurityCheck(), input, drop, fine, wifi, phone);
   root.append(wrap);
 }
 
