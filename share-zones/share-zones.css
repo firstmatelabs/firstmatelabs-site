@@ -85,8 +85,8 @@ main{padding-bottom:80px}
 
 /* what we receive */
 #receive{min-width:0}
-.receive-lines{max-width:100%;overflow-x:auto;border-top:1px solid var(--c-border-strong)}
-.ex-line{font-family:var(--font-mono);font-size:13px;line-height:22px;white-space:nowrap;padding:14px 0;border-bottom:1px solid var(--c-border)}
+.receive-lines{max-width:100%;border-top:1px solid var(--c-border-strong)}
+.ex-line{font-family:var(--font-mono);font-size:13px;line-height:22px;white-space:pre-wrap;overflow-wrap:anywhere;padding:14px 0 14px 1em;text-indent:-1em;border-bottom:1px solid var(--c-border)}
 .ex-line .dim{color:var(--c-muted)}
 .ex-line .keep{color:var(--c-text)}
 .receive-caption{margin-top:12px;font-size:var(--text-small);line-height:var(--leading-small);color:var(--c-text-2)}
