@@ -10,8 +10,8 @@ export const strings = {
 
   h1: "Share your zone lines",
   intro: [
-    "I'm building a levelling overlay for Path of Exile 1 and 2. It reads the game's own log file and draws on top of the screen. It doesn't touch the game, read its memory, or press any keys.",
-    "To get it right I need lots of examples of zones people have entered. The game writes a few lines to its log file, Client.txt, every time you enter a zone. Just drop your whole Client.txt below. The page keeps those lines, throws the rest away in your browser, and sends only what you see in the preview.",
+    "We're building a levelling overlay for Path of Exile 1 and 2. It reads the game's own log file and draws on top of the screen. It doesn't touch the game, read its memory or press any keys, just the way GGG likes it.",
+    "To get it right we need lots of examples of zones people have entered. The game writes a few lines to its log file, Client.txt, every time you enter a zone. Just drop your whole Client.txt below. The page keeps those lines, throws the rest away in your browser, and sends only what you see in the preview.",
   ],
 
   dropLabel: "Drag your Client.txt here",
