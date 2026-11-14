@@ -143,8 +143,10 @@ h1{font-size:56px}h2{font-size:40px}h3{font-size:24px}
 .email-copy,.tier-email{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;vertical-align:middle;max-width:100%;min-width:0;margin:0}
 .tier-email-text{min-width:0;overflow-wrap:anywhere}
 .email-copy .email-addr,.tier-email .email-addr{font-family:var(--mono);font-weight:500;color:var(--tx);overflow-wrap:anywhere}
-.email-copy .btn,.tier-email .btn{cursor:pointer;flex:none;min-height:40px;height:40px;padding:0 14px;font-size:14px}
+.email-copy .btn,.tier-email .btn{cursor:pointer;flex:none;min-height:40px;height:40px;padding:0 14px;font-size:14px;border:2px solid var(--y);color:var(--y);background:transparent;border-radius:999px;width:auto}
+.email-copy .btn:hover,.tier-email .btn:hover{background:rgba(255,196,0,.1)}
 .contact .tier-email{margin:6px 0 28px}
+.contact .email-copy .btn,.contact .tier-email .btn{width:auto}
 .meta .email-copy .btn{min-height:40px}
 @media (max-width:599px){
   .top-in{flex-wrap:wrap;height:auto;min-height:64px;padding-top:8px;padding-bottom:8px}
