@@ -139,3 +139,11 @@ nav .email-copy{min-width:0;flex:1 1 auto}
   nav .wrap{height:auto;min-height:60px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
   nav .email-copy{flex:1 1 100%;justify-content:flex-end}
 }
+
+/* Portrait clip cards between the intro and the drop zone. */
+.clip-cards{display:grid;grid-template-columns:repeat(var(--clip-n,4),minmax(0,1fr));gap:16px;margin-top:40px;max-width:100%;min-width:0}
+.clip-card{aspect-ratio:5/7;border:1px solid var(--c-border);border-radius:var(--r-md);overflow:hidden;background:var(--c-surface);min-width:0}
+.clip-card video{display:block;width:100%;height:100%;object-fit:cover;background:var(--c-surface)}
+@media (max-width:599px){
+  .clip-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:28px}
+}

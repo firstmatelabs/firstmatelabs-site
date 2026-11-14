@@ -49,6 +49,64 @@ function annotatedLine(raw) {
   return wrap;
 }
 
+
+function renderClipCards() {
+  const items = Array.isArray(S.clipCards) ? S.clipCards.filter((c) => c && c.src) : [];
+  const existing = document.getElementById("clip-cards");
+  if (existing) existing.remove();
+  if (!items.length) return;
+
+  const row = document.createElement("div");
+  row.id = "clip-cards";
+  row.className = "clip-cards";
+  row.style.setProperty("--clip-n", String(Math.min(items.length, 4)));
+  row.setAttribute("aria-hidden", items.every((c) => !c.label) ? "true" : "false");
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  for (const item of items.slice(0, 4)) {
+    const frame = document.createElement("div");
+    frame.className = "clip-card";
+    const video = document.createElement("video");
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.preload = "metadata";
+    if (item.poster) video.poster = item.poster;
+    if (item.label) video.setAttribute("aria-label", item.label);
+    else video.setAttribute("aria-hidden", "true");
+    video.setAttribute("src", item.src);
+    if (!reduce) video.autoplay = true;
+    frame.append(video);
+    row.append(frame);
+  }
+
+  const lead = document.querySelector(".page-head .lead");
+  lead.after(row);
+
+  const videos = [...row.querySelectorAll("video")];
+  if (reduce) {
+    for (const v of videos) {
+      v.removeAttribute("autoplay");
+      v.removeAttribute("src");
+      v.load();
+    }
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      const v = entry.target;
+      if (entry.isIntersecting) v.play().catch(() => {});
+      else v.pause();
+    }
+  }, { rootMargin: "80px 0px", threshold: 0.2 });
+  for (const v of videos) io.observe(v);
+}
+
 function renderChrome() {
   document.title = S.title;
   const desc = document.querySelector('meta[name="description"]');
@@ -451,6 +509,7 @@ async function sendLines(result, button, clear) {
 
 function boot() {
   renderChrome();
+  renderClipCards();
   renderReceive();
   renderCollect();
   renderFaq();

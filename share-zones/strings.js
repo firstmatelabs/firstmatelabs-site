@@ -103,4 +103,10 @@ export const strings = {
   footerEmail: "hello@firstmatelabs.com",
   footerPrivacy: "Privacy Policy",
   footerLegal: "This site isn't affiliated with or endorsed by Grinding Gear Games in any way.",
+
+  // Portrait clip cards (5:7) shown between the intro and the drop zone.
+  // Leave this list empty until Video Editor Bot delivers files into cards/.
+  // Each item: { src, poster, label }
+  clipCards: [],
 };
+
