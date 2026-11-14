@@ -50,7 +50,7 @@ export const strings = {
   gameBoth: "1 and 2",
   previewLead: "This is everything that will be sent. Scroll through it if you like.",
   send: (n) => `Send these ${n.toLocaleString("en-US")} lines`,
-  clear: "Clear, don't send", // designer label; Marketing says "Cancel (nothing is sent)"
+  clear: "Cancel",
   previewFine: "Only the lines in this box are sent. The rest of your log never leaves your PC.",
   sending: "Sending...",
   sendError: "That didn't go through. Nothing was saved. Try again in a minute.",
@@ -139,6 +139,7 @@ export const strings = {
     { q: "Does the whole log get uploaded?", a: "No. Your browser trims it first, and only the lines shown in the box are sent." },
     { q: "Can I send logs from both games?", a: "Yes. Drop each one in. The page shows which game it looks like." },
     { q: "Is my log too big?", a: "Logs can be hundreds of MB. The page reads it in pieces, so it may take a few seconds." },
+    { q: "How long do you keep uploads?", a: "We keep uploads while we build the overlay. They hold no names, chat or account details, so there's nothing that ties one back to you." },
     { q: "Can I get my upload deleted?", a: "We don't store your IP or your name with the upload, so we can't match an upload to a person." },
     { q: "Who's behind this?", a: "A small team that makes tools for games. Not affiliated with or endorsed by Grinding Gear Games." },
   ],
