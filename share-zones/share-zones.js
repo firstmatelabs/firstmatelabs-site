@@ -1,7 +1,7 @@
 import { strings as S } from "./strings.js";
 import { enhanceEmailCopies } from "../copy-email.js";
 import { renderSecurityCheck } from "./security.js";
-import { renderHeroDiscord, discordCard } from "./discord.js";
+import { renderHeroDiscord, discordCard, renderBetaSection } from "./discord.js";
 import { processFile, formatBytes, MATCH_RE, TIMESTAMP_LENGTH, stripLine } from "./strip.js";
 
 // Preview Worker only. firstmatelabs.com is not on the allowlist.
@@ -541,6 +541,7 @@ function boot() {
   acceptPageDrops();
   renderChrome();
   renderHeroDiscord();
+  renderBetaSection();
   renderClipCards();
   renderReceive();
   renderCollect();
