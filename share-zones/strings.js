@@ -104,14 +104,14 @@ export const strings = {
   footerPrivacy: "Privacy Policy",
   footerLegal: "This site isn't affiliated with or endorsed by Grinding Gear Games in any way.",
 
-  // Portrait clip cards (5:7) shown between the intro and the drop zone.
-  // Leave this list empty until Video Editor Bot delivers files into cards/.
-  // Each item: { src, poster, label }
+  // Portrait clip cards (5:7). slot "hero" sits beside the intro; slot "lower"
+  // sits beside the drop zone. A slot with no items renders nothing.
+  // Each item: { src, poster, label, slot }
   clipCards: [
-    { src: "cards/route-1.mp4", poster: "cards/route-1.png", label: "Overlay route clip 1" },
-    { src: "cards/route-2.mp4", poster: "cards/route-2.png", label: "Overlay route clip 2" },
-    { src: "cards/route-3.mp4", poster: "cards/route-3.png", label: "Overlay route clip 3" },
-    { src: "cards/route-4.mp4", poster: "cards/route-4.png", label: "Overlay route clip 4" },
+    { src: "cards/route-1.mp4", poster: "cards/route-1.png", label: "Overlay route clip 1", slot: "hero" },
+    { src: "cards/route-2.mp4", poster: "cards/route-2.png", label: "Overlay route clip 2", slot: "hero" },
+    { src: "cards/route-3.mp4", poster: "cards/route-3.png", label: "Overlay route clip 3", slot: "lower" },
+    { src: "cards/route-4.mp4", poster: "cards/route-4.png", label: "Overlay route clip 4", slot: "lower" },
   ],
 };
 

@@ -140,10 +140,34 @@ nav .email-copy{min-width:0;flex:1 1 auto}
   nav .email-copy{flex:1 1 100%;justify-content:flex-end}
 }
 
-/* Portrait clip cards between the intro and the drop zone. */
-.clip-cards{display:grid;grid-template-columns:repeat(var(--clip-n,4),minmax(0,1fr));gap:16px;margin-top:40px;max-width:100%;min-width:0}
-.clip-card{aspect-ratio:5/7;border:1px solid var(--c-border);border-radius:var(--r-md);overflow:hidden;background:var(--c-surface);min-width:0}
+/* Clip cards: a fanned pair beside the intro, and a pair fanned the other way
+   beside the drop zone. Each grid only switches on when its slot has cards. */
+.hero.has-cards{display:grid;grid-template-columns:minmax(0,720px) minmax(280px,1fr);gap:48px;align-items:center}
+.drop-split.has-cards{display:grid;grid-template-columns:300px minmax(0,1fr);gap:56px;align-items:start}
+.drop-split>#panel{min-width:0}
+.drop-split .clip-fan{position:sticky;top:110px}
+
+.clip-fan{display:flex;justify-content:center;align-items:flex-start;padding:16px 20px 28px;overflow-x:clip;min-width:0}
+.clip-card{--tilt:-5deg;--dy:0px;position:relative;flex:0 0 54%;max-width:200px;aspect-ratio:5/7;border:1px solid var(--c-border-strong);border-radius:var(--r-lg);overflow:hidden;background:var(--c-surface);
+  box-shadow:0 22px 44px -18px rgba(0,0,0,0.85),0 6px 14px -6px rgba(0,0,0,0.6),0 0 36px -10px var(--c-accent-line);
+  transform:translateY(var(--dy)) rotate(var(--tilt));transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s}
+.clip-card::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),inset 0 0 0 1px rgba(255,255,255,0.03)}
+.clip-card+.clip-card{--tilt:4deg;--dy:40px;margin-left:-12%}
+.clip-fan.reverse .clip-card{--tilt:5deg;--dy:40px}
+.clip-fan.reverse .clip-card+.clip-card{--tilt:-4deg;--dy:0px}
 .clip-card video{display:block;width:100%;height:100%;object-fit:cover;background:var(--c-surface)}
-@media (max-width:599px){
-  .clip-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:28px}
+@media (hover:hover) and (pointer:fine){
+  .clip-card:hover{z-index:2;transform:translateY(calc(var(--dy) - 10px)) rotate(0deg);border-color:var(--c-accent-line);
+    box-shadow:0 28px 52px -18px rgba(0,0,0,0.9),0 8px 18px -6px rgba(0,0,0,0.6),0 0 44px -8px var(--c-accent-line)}
+}
+@media (prefers-reduced-motion:reduce){
+  .clip-card{transition:none}
+}
+@media (max-width:899px){
+  .hero.has-cards{display:block}
+  .drop-split.has-cards{display:flex;flex-direction:column}
+  .clip-fan{max-width:300px;margin:28px auto 0}
+  .drop-split .clip-fan{position:static;order:1;margin-top:40px}
+  .clip-card{max-width:150px}
+  .clip-card+.clip-card,.clip-fan.reverse .clip-card{--dy:28px}
 }

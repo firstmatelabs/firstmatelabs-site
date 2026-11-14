@@ -50,52 +50,46 @@ function annotatedLine(raw) {
 }
 
 
+function clipVideo(item, reduce) {
+  const video = document.createElement("video");
+  video.muted = true;
+  video.defaultMuted = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
+  video.preload = "metadata";
+  if (item.poster) video.poster = item.poster;
+  if (item.label) video.setAttribute("aria-label", item.label);
+  else video.setAttribute("aria-hidden", "true");
+  if (!reduce) {
+    video.setAttribute("src", item.src);
+    video.autoplay = true;
+  }
+  return video;
+}
+
+// Fills each .clip-fan[data-slot] with its clipCards. Empty slots stay empty
+// and their parent drops the two-column layout.
 function renderClipCards() {
   const items = Array.isArray(S.clipCards) ? S.clipCards.filter((c) => c && c.src) : [];
-  const existing = document.getElementById("clip-cards");
-  if (existing) existing.remove();
-  if (!items.length) return;
-
-  const row = document.createElement("div");
-  row.id = "clip-cards";
-  row.className = "clip-cards";
-  row.style.setProperty("--clip-n", String(Math.min(items.length, 4)));
-  row.setAttribute("aria-hidden", items.every((c) => !c.label) ? "true" : "false");
-
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  for (const item of items.slice(0, 4)) {
-    const frame = document.createElement("div");
-    frame.className = "clip-card";
-    const video = document.createElement("video");
-    video.muted = true;
-    video.defaultMuted = true;
-    video.loop = true;
-    video.playsInline = true;
-    video.setAttribute("playsinline", "");
-    video.setAttribute("webkit-playsinline", "");
-    video.preload = "metadata";
-    if (item.poster) video.poster = item.poster;
-    if (item.label) video.setAttribute("aria-label", item.label);
-    else video.setAttribute("aria-hidden", "true");
-    video.setAttribute("src", item.src);
-    if (!reduce) video.autoplay = true;
-    frame.append(video);
-    row.append(frame);
-  }
-
-  const lead = document.querySelector(".page-head .lead");
-  lead.after(row);
-
-  const videos = [...row.querySelectorAll("video")];
-  if (reduce) {
-    for (const v of videos) {
-      v.removeAttribute("autoplay");
-      v.removeAttribute("src");
-      v.load();
+  const videos = [];
+  for (const fan of document.querySelectorAll(".clip-fan[data-slot]")) {
+    const mine = items.filter((c) => c.slot === fan.dataset.slot).slice(0, 2);
+    fan.replaceChildren();
+    fan.parentElement.classList.toggle("has-cards", mine.length > 0);
+    fan.hidden = !mine.length;
+    for (const item of mine) {
+      const card = document.createElement("div");
+      card.className = "clip-card";
+      const video = clipVideo(item, reduce);
+      card.append(video);
+      fan.append(card);
+      videos.push(video);
     }
-    return;
   }
+  if (reduce || !videos.length) return;
 
   const io = new IntersectionObserver((entries) => {
     for (const entry of entries) {
