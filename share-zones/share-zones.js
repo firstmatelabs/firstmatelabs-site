@@ -335,12 +335,18 @@ function renderMessage(kind, message, extra) {
     const hint = document.createElement("p");
     hint.style.marginTop = "8px";
     hint.textContent = S.readingHint;
+    const row = document.createElement("div");
+    row.className = "progress-row";
     const bar = document.createElement("div");
     bar.className = "progress";
     const i = document.createElement("i");
     i.id = "read-bar";
     bar.append(i);
-    box.append(hint, bar);
+    const count = document.createElement("span");
+    count.id = "read-count";
+    count.className = "read-count";
+    row.append(bar, count);
+    box.append(hint, row);
   }
   if (extra) box.append(extra);
   if (kind === "wrong" || kind === "empty") {
@@ -363,19 +369,23 @@ function renderPreview(result) {
 
   const facts = document.createElement("div");
   facts.className = "facts";
-  const items = [
+  const factItems = [
     [S.factLines, result.lines.length.toLocaleString("en-US")],
     [S.factGame, "Path of Exile " + gameLabel(result.game)],
     [S.factDates, result.dateRange ? S.dateRange(result.dateRange.from, result.dateRange.to) : S.dateRangeUnknown],
   ];
-  for (const [k, v] of items) {
-    const d = document.createElement("div");
-    d.append(k);
+  factItems.forEach(([k, v], i) => {
+    if (i) {
+      const sep = document.createElement("span");
+      sep.className = "sep";
+      sep.textContent = "·";
+      facts.append(sep);
+    }
+    facts.append(k + " ");
     const b = document.createElement("b");
     b.textContent = v;
-    d.append(b);
-    facts.append(d);
-  }
+    facts.append(b);
+  });
   const size = document.createElement("p");
   size.className = "size-drop";
   size.textContent = S.sizeDrop(formatBytes(result.readBytes), formatBytes(result.sendBytes));
@@ -439,9 +449,10 @@ function renderPreview(result) {
   const clear = document.createElement("button");
   clear.type = "button";
   clear.className = "btn quiet";
+  clear.id = "clear-btn";
   clear.textContent = S.clear;
   clear.addEventListener("click", renderDropIdle);
-  send.addEventListener("click", () => sendLines(result, send));
+  send.addEventListener("click", () => sendLines(result, send, clear));
   sendRow.append(send, clear);
   const fine = document.createElement("p");
   fine.className = "send-fine";
@@ -479,9 +490,11 @@ function renderThanks(n) {
 async function handleFile(file) {
   renderMessage("reading", S.reading);
   const bar = $("#read-bar");
+  const readCount = $("#read-count");
   const result = await processFile(file, {
     onProgress(done, total) {
       if (bar && total) bar.style.width = Math.round((done / total) * 100) + "%";
+      if (readCount && total) readCount.textContent = S.readingProgress(formatBytes(done), formatBytes(total));
     },
   });
   if (result.wrongFile) {
@@ -495,11 +508,24 @@ async function handleFile(file) {
   renderPreview(result);
 }
 
-async function sendLines(result, button) {
+function setSendingUi(send, clear, on, lineCount) {
+  send.disabled = on;
+  if (clear) clear.disabled = on;
+  if (on) {
+    send.replaceChildren();
+    const wait = document.createElement("span");
+    wait.className = "send-wait";
+    wait.setAttribute("aria-hidden", "true");
+    send.append(wait, document.createTextNode(S.sending));
+  } else {
+    send.textContent = S.send(lineCount);
+  }
+}
+
+async function sendLines(result, button, clear) {
   const err = $("#send-error");
   if (err) err.hidden = true;
-  button.disabled = true;
-  button.textContent = S.sending;
+  setSendingUi(button, clear || $("#clear-btn"), true, result.lines.length);
   try {
     const res = await fetch(UPLOAD_URL, {
       method: "POST",
@@ -509,8 +535,7 @@ async function sendLines(result, button) {
     if (!res.ok) throw new Error(String(res.status));
     renderThanks(result.lines.length);
   } catch {
-    button.disabled = false;
-    button.textContent = S.send(result.lines.length);
+    setSendingUi(button, clear || $("#clear-btn"), false, result.lines.length);
     if (err) err.hidden = false;
   }
 }
@@ -533,25 +558,24 @@ window.__shareZonesSetState = async function (name, opts = {}) {
     if (drop) drop.classList.add("over");
     return;
   }
-  if (name === "reading") { renderMessage("reading", S.reading); return; }
+  if (name === "reading") {
+    renderMessage("reading", S.reading);
+    const total = opts.readBytes || 0;
+    const done = opts.doneBytes != null ? opts.doneBytes : Math.round(total * 0.34);
+    const bar = $("#read-bar");
+    const readCount = $("#read-count");
+    if (bar && total) bar.style.width = Math.round((done / total) * 100) + "%";
+    if (readCount && total) readCount.textContent = S.readingProgress(formatBytes(done), formatBytes(total));
+    return;
+  }
   if (name === "nothing-found") { renderMessage("empty", S.nothingFound); return; }
   if (name === "wrong-file") { renderMessage("wrong", S.wrongFile); return; }
   if (name === "sending" || name === "preview" || name === "send-failed") {
-    const demo = opts.result || {
-      lines: [
-        S.receiveGeneratingSent,
-        S.receiveTileSent,
-      ],
-      body: S.receiveGeneratingSent + "\n" + S.receiveTileSent + "\n",
-      game: "1",
-      dateRange: { from: "2026/11/04 21:40:10", to: "2026/11/04 21:40:11" },
-      readBytes: 142 * 1024 * 1024,
-      sendBytes: 380 * 1024,
-    };
+    if (!opts.result) throw new Error("screenshot fixture missing real processFile result");
+    const demo = opts.result;
     renderPreview(demo);
     if (name === "sending") {
-      const b = $("#send-btn");
-      if (b) { b.disabled = true; b.textContent = S.sending; }
+      setSendingUi($("#send-btn"), $("#clear-btn"), true, demo.lines.length);
     }
     if (name === "send-failed") {
       const e = $("#send-error");
@@ -559,7 +583,7 @@ window.__shareZonesSetState = async function (name, opts = {}) {
     }
     return;
   }
-  if (name === "sent") { renderThanks(opts.n || 2); return; }
+  if (name === "sent") { renderThanks(opts.n); return; }
   if (name === "phone-note") { renderDropIdle(); return; }
 };
 

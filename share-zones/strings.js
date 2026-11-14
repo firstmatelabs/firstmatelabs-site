@@ -30,6 +30,7 @@ export const strings = {
   // designer: designed reading state
   reading: "Reading on your computer. Nothing sent.",
   readingHint: "Big logs can take a few seconds.",
+  readingProgress: (done, total) => `${done} of ${total} read`,
 
   nothingFound: "No zone lines found. Check that this is Client.txt from the game's logs folder.",
   wrongFile: "That doesn't look like a Client.txt. Nothing was sent.",
