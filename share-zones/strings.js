@@ -4,12 +4,13 @@
 // and have no Marketing counterpart.
 
 export const strings = {
-  title: "Share your zone lines",
+  title: "Help us build a better leveling overlay",
   metaDescription:
     "Drop your Client.txt here. Your browser keeps only the zone lines and throws the rest away before anything is sent.",
 
-  h1: "Share your zone lines",
+  h1: "Help us build a better leveling overlay",
   intro: [
+    "Drop your Client.txt here. Your browser keeps only the lines about zones you've entered and strips out things like your character names and chat before anything is sent.",
     "We're building a levelling overlay for Path of Exile 1 and 2. It reads the game's own log file and draws on top of the screen. It doesn't touch the game, read its memory or press any keys, just the way GGG likes it.",
     "To get it right we need lots of examples of zones people have entered. The game writes a few lines to its log file, Client.txt, every time you enter a zone. Just drop your whole Client.txt below. The page keeps those lines, throws the rest away in your browser, and sends only what you see in the preview.",
   ],
