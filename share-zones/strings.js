@@ -3,6 +3,9 @@
 // Extra lines marked "designer" come from /workspace/logshare/design/LAYOUT.md
 // and have no Marketing counterpart.
 
+// Discord invite for beta testers. Leave empty to hide every Discord link.
+export const DISCORD_INVITE = "";
+
 export const strings = {
   title: "Help us build a better leveling overlay",
   metaDescription:
@@ -125,6 +128,15 @@ export const strings = {
     { label: "Gemini", href: "https://gemini.google.com/app" },
     { label: "Grok", href: "https://grok.com/" },
   ],
+  // Discord beta invite (shown only when DISCORD_INVITE is set)
+  discordHeroLink: "Join our Discord",
+  discordPopoverLead: "Not sure?",
+  discordPopoverLink: "Come ask us on Discord",
+  discordEyebrow: "Beta",
+  discordTitle: "Interested in being a beta tester?",
+  discordBody:
+    "We're testing the leveling overlay with a small group of players. Join our Discord to try early builds and tell us what works and what doesn't.",
+  discordButton: "Join our Discord",
   secPromptIntro:
     "Please check this page for me: https://firstmatelabs.com/share-zones/ . Below is the script that runs in my browser and strips my Path of Exile Client.txt before anything is sent, followed by an example of exactly what gets sent.",
   secPromptScriptUrl: "Script URL:",
