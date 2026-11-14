@@ -197,6 +197,98 @@ function gameLabel(game) {
   return S.gameUnknown;
 }
 
+const INSTALL_KEY = "share-zones-install";
+
+function savedInstall() {
+  try {
+    const v = localStorage.getItem(INSTALL_KEY);
+    if (v && Object.hasOwn(S.paths, v)) return v;
+  } catch {}
+  return S.installs[0].id;
+}
+
+function pathRow(p) {
+  const row = document.createElement("div");
+  row.className = "path";
+  const mid = document.createElement("div");
+  const lbl = document.createElement("div");
+  lbl.className = "lbl";
+  lbl.textContent = p.label;
+  const code = document.createElement("code");
+  // Allow line breaks after each backslash so narrow columns wrap at folders.
+  p.path.split("\\").forEach((part, i, all) => {
+    code.append(i < all.length - 1 ? part + "\\" : part);
+    if (i < all.length - 1) code.append(document.createElement("wbr"));
+  });
+  mid.append(lbl, code);
+  const c = document.createElement("button");
+  c.type = "button";
+  c.className = "btn sm";
+  c.textContent = S.copyPath;
+  c.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(p.path);
+      c.textContent = S.copied;
+      setTimeout(() => { c.textContent = S.copyPath; }, 1500);
+    } catch {}
+  });
+  row.append(mid, c);
+  return row;
+}
+
+// "Two easy steps": an install toggle with the two Client.txt paths, then
+// a pointer to the drop zone below.
+function renderSteps() {
+  const box = document.createElement("section");
+  box.className = "steps";
+  box.setAttribute("aria-labelledby", "steps-h");
+  const h = document.createElement("h3");
+  h.id = "steps-h";
+  h.textContent = S.stepsHeading;
+  const ol = document.createElement("ol");
+
+  const one = document.createElement("li");
+  const head = document.createElement("div");
+  head.className = "step-head";
+  const t1 = document.createElement("p");
+  t1.textContent = S.stepCopy;
+  const group = document.createElement("div");
+  group.className = "seg";
+  group.setAttribute("role", "group");
+  group.setAttribute("aria-label", S.installLabel);
+  const list = document.createElement("div");
+  list.className = "path-list";
+  list.setAttribute("aria-live", "polite");
+  const buttons = S.installs.map((inst) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = inst.label;
+    b.dataset.install = inst.id;
+    b.addEventListener("click", () => choose(inst.id, true));
+    return b;
+  });
+  function choose(id, remember) {
+    for (const b of buttons) b.setAttribute("aria-pressed", String(b.dataset.install === id));
+    list.replaceChildren(...S.paths[id].map(pathRow));
+    if (remember) {
+      try { localStorage.setItem(INSTALL_KEY, id); } catch {}
+    }
+  }
+  group.append(...buttons);
+  head.append(t1, group);
+  one.append(head, list);
+  choose(savedInstall(), false);
+
+  const two = document.createElement("li");
+  const t2 = document.createElement("p");
+  t2.textContent = S.stepOpen;
+  two.append(t2);
+
+  ol.append(one, two);
+  box.append(h, ol);
+  return box;
+}
+
 function renderDropIdle() {
   const root = panel();
   root.replaceChildren();
@@ -241,42 +333,11 @@ function renderDropIdle() {
   wifi.className = "wifi";
   wifi.textContent = S.wifiLine;
 
-  const paths = document.createElement("div");
-  paths.className = "paths";
-  const where = document.createElement("p");
-  where.className = "where";
-  where.textContent = S.whereToFind;
-  paths.append(where);
-  for (const p of S.paths) {
-    const row = document.createElement("div");
-    row.className = "path";
-    const mid = document.createElement("div");
-    const lbl = document.createElement("div");
-    lbl.className = "lbl";
-    lbl.textContent = p.label;
-    const code = document.createElement("code");
-    code.textContent = p.path;
-    mid.append(lbl, code);
-    const c = document.createElement("button");
-    c.type = "button";
-    c.className = "btn sm";
-    c.textContent = S.copyPath;
-    c.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(p.path);
-        c.textContent = S.copied;
-        setTimeout(() => { c.textContent = S.copyPath; }, 1500);
-      } catch {}
-    });
-    row.append(mid, c);
-    paths.append(row);
-  }
-
   const phone = document.createElement("p");
   phone.className = "phone-note";
   phone.textContent = S.phoneNote;
 
-  wrap.append(input, drop, fine, wifi, paths, phone);
+  wrap.append(renderSteps(), input, drop, fine, wifi, phone);
   root.append(wrap);
 }
 

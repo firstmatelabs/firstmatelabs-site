@@ -18,13 +18,26 @@ export const strings = {
   dropLabel: "Drag your Client.txt here",
   chooseFile: "or choose the file",
   dropFine: "Your file stays on your PC. This page reads it in your browser and keeps only the zone lines.",
-  whereToFind: "In your game folder, inside logs. Common spots are listed below.",
-  paths: [
-    { label: "Path of Exile 2 (Steam)", path: String.raw`C:\Program Files (x86)\Steam\steamapps\common\Path of Exile 2\logs\Client.txt` },
-    { label: "Path of Exile 2 (standalone)", path: String.raw`C:\Program Files (x86)\Grinding Gear Games\Path of Exile 2\logs\Client.txt` },
-    { label: "Path of Exile 1 (Steam)", path: String.raw`C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt` },
-    { label: "Path of Exile 1 (standalone)", path: String.raw`C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt` },
+  // Two easy steps, shown above the drop zone.
+  stepsHeading: "Two easy steps",
+  stepCopy: "Copy your Client.txt location.",
+  stepOpen: "Click the box below, paste it into the File name field, then click Open.",
+  installLabel: "Where the game is installed",
+  installs: [
+    { id: "steam", label: "Steam" },
+    { id: "standalone", label: "Standalone" },
   ],
+  // Client.txt locations per install, Path of Exile 1 first.
+  paths: {
+    steam: [
+      { label: "Path of Exile 1", path: String.raw`C:\Program Files (x86)\Steam\steamapps\common\Path of Exile\logs\Client.txt` },
+      { label: "Path of Exile 2", path: String.raw`C:\Program Files (x86)\Steam\steamapps\common\Path of Exile 2\logs\Client.txt` },
+    ],
+    standalone: [
+      { label: "Path of Exile 1", path: String.raw`C:\Program Files (x86)\Grinding Gear Games\Path of Exile\logs\Client.txt` },
+      { label: "Path of Exile 2", path: String.raw`C:\Program Files (x86)\Grinding Gear Games\Path of Exile 2\logs\Client.txt` },
+    ],
+  },
   copyPath: "Copy",
   copied: "Copied",
 
