@@ -4,7 +4,6 @@
 import { strings as S } from "./strings.js";
 import { copyText } from "../copy-email.js";
 import { stripLine, MATCH_RE, TIMESTAMP_LENGTH } from "./strip.js";
-import { discordPopoverLine } from "./discord.js";
 
 const PULSE_KEY = "share-zones-sec-pulsed";
 const SHEET_MQ = "(max-width: 640px), (pointer: coarse)";
@@ -89,8 +88,6 @@ export function renderSecurityCheck() {
   code.target = "_blank";
   code.rel = "noopener noreferrer";
   pop.append(handle, close, eyebrow, title, copy, label, chips, code);
-  const discord = discordPopoverLine();
-  if (discord) pop.append(discord);
 
   const backdrop = el("div", "sec-backdrop");
   backdrop.hidden = true;

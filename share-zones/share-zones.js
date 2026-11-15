@@ -1,7 +1,6 @@
 import { strings as S } from "./strings.js";
 import { enhanceEmailCopies } from "../copy-email.js";
 import { renderSecurityCheck } from "./security.js";
-import { renderHeroDiscord, discordCard, renderBetaSection } from "./discord.js";
 import { processFile, formatBytes } from "./strip.js";
 
 // Preview Worker only. firstmatelabs.com is not on the allowlist.
@@ -411,8 +410,7 @@ function renderThanks(n) {
   b.style.marginTop = "20px";
   b.textContent = S.sendAnother;
   b.addEventListener("click", renderDropIdle);
-  const card = discordCard();
-  box.append(...(card ? [h, card, b] : [h, b]));
+  box.append(h, b);
   root.append(box);
 }
 
@@ -484,8 +482,6 @@ function acceptPageDrops() {
 function boot() {
   acceptPageDrops();
   renderChrome();
-  renderHeroDiscord();
-  renderBetaSection();
   renderClipCards();
   renderCollect();
   renderFaq();
