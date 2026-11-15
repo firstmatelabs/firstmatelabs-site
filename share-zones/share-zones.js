@@ -2,7 +2,7 @@ import { strings as S } from "./strings.js";
 import { enhanceEmailCopies } from "../copy-email.js";
 import { renderSecurityCheck } from "./security.js";
 import { renderHeroDiscord, discordCard, renderBetaSection } from "./discord.js";
-import { processFile, formatBytes, MATCH_RE, TIMESTAMP_LENGTH, stripLine } from "./strip.js";
+import { processFile, formatBytes } from "./strip.js";
 
 // Preview Worker only. firstmatelabs.com is not on the allowlist.
 export const UPLOAD_URL = "https://fml-share-zones.noisy-night-24ec.workers.dev/";
@@ -14,44 +14,6 @@ let sending = false;
 function text(el, value) {
   if (el) el.textContent = value;
 }
-
-function annotatedLine(raw) {
-  const sent = stripLine(raw);
-  const match = MATCH_RE.exec(raw);
-  const stamp = raw.slice(0, TIMESTAMP_LENGTH);
-  const wrap = document.createElement("span");
-  if (!sent || !match || !/^\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}$/.test(stamp)) {
-    const span = document.createElement("span");
-    span.className = "dim";
-    span.textContent = raw;
-    wrap.append(span);
-    return wrap;
-  }
-  const mid = raw.slice(TIMESTAMP_LENGTH, match.index);
-  const after = raw.slice(match.index + match[0].length);
-  const keep1 = document.createElement("span");
-  keep1.className = "keep";
-  keep1.textContent = stamp;
-  wrap.append(keep1);
-  if (mid) {
-    const dim = document.createElement("span");
-    dim.className = "dim";
-    dim.textContent = mid;
-    wrap.append(dim);
-  }
-  const keep2 = document.createElement("span");
-  keep2.className = "keep";
-  keep2.textContent = match[0];
-  wrap.append(keep2);
-  if (after) {
-    const dim2 = document.createElement("span");
-    dim2.className = "dim";
-    dim2.textContent = after;
-    wrap.append(dim2);
-  }
-  return wrap;
-}
-
 
 function clipVideo(item, reduce) {
   const video = document.createElement("video");
@@ -116,7 +78,6 @@ function renderChrome() {
     el.textContent = p;
     lead.append(el);
   }
-  text($("#receive-block h2"), S.receiveHeading);
   text($("#collect-block h2"), S.collectHeading);
   text($("#faq-block h2"), S.faqHeading);
   const footLinks = document.querySelectorAll("footer .links a");
@@ -125,23 +86,6 @@ function renderChrome() {
   const brand = $("nav .brand");
   if (brand) brand.setAttribute("aria-label", S.navHome);
   enhanceEmailCopies(document);
-}
-
-function renderReceive() {
-  const root = $("#receive");
-  root.replaceChildren();
-  const list = document.createElement("div");
-  list.className = "receive-lines";
-  for (const raw of [S.receiveGeneratingRaw, S.receiveTileRaw]) {
-    const line = document.createElement("div");
-    line.className = "ex-line";
-    line.append(annotatedLine(raw));
-    list.append(line);
-  }
-  const caption = document.createElement("p");
-  caption.className = "receive-caption";
-  caption.textContent = S.receiveCaption;
-  root.append(list, caption);
 }
 
 function renderCollect() {
@@ -543,7 +487,6 @@ function boot() {
   renderHeroDiscord();
   renderBetaSection();
   renderClipCards();
-  renderReceive();
   renderCollect();
   renderFaq();
   renderDropIdle();

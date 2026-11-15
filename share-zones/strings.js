@@ -80,14 +80,6 @@ export const strings = {
   factGame: "Game",
   factDates: "Dates",
 
-  receiveHeading: "What we receive",
-  // Real lines from a 2026-11-04 Client.txt capture on the box (mm-text). Not Marketing's sample numbers.
-  receiveGeneratingRaw: '2026/11/04 21:40:10 34023296 1186a8a3 [DEBUG Client 11356] Generating level 1 area "1_1_1" with seed 1217117143',
-  receiveGeneratingSent: '2026/11/04 21:40:10 Generating level 1 area "1_1_1" with seed 1217117143',
-  receiveTileRaw: "2026/11/04 21:40:11 34024078 f22b6a02 [INFO Client 11356] Tile hash: 722565776",
-  receiveTileSent: "2026/11/04 21:40:11 Tile hash: 722565776",
-  receiveCaption: "Grey parts are removed in your browser. Only the bright parts are sent.",
-
   collectHeading: "What's collected and what isn't",
   collectWhat: "What we collect",
   collectWhatBody:
@@ -150,6 +142,9 @@ export const strings = {
   secPromptScriptUrl: "Script URL:",
   secPromptScript: "The script:",
   secPromptRaw: "Example raw line:",
+  // Real line from a 2026-11-04 Client.txt capture; the prompt shows it and its stripped form.
+  secPromptExampleLine:
+    '2026/11/04 21:40:10 34023296 1186a8a3 [DEBUG Client 11356] Generating level 1 area "1_1_1" with seed 1217117143',
   secPromptSent: "What gets sent:",
   secPromptQuestion:
     "Read the script and the example, then tell me in plain words: is this safe to use, and does it send anything besides zone lines?",

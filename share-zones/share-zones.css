@@ -93,14 +93,6 @@ main{padding-bottom:80px}
 .error{margin-top:12px;color:var(--c-danger);font-size:var(--text-small)}
 .thanks h3{font-family:var(--font-display);font-weight:600;font-size:26px;line-height:32px;margin-bottom:12px}
 
-/* what we receive */
-#receive{min-width:0}
-.receive-lines{max-width:100%;border-top:1px solid var(--c-border-strong)}
-.ex-line{font-family:var(--font-mono);font-size:13px;line-height:22px;white-space:pre-wrap;overflow-wrap:anywhere;padding:14px 0 14px 1em;text-indent:-1em;border-bottom:1px solid var(--c-border)}
-.ex-line .dim{color:var(--c-muted)}
-.ex-line .keep{color:var(--c-text)}
-.receive-caption{margin-top:12px;font-size:var(--text-small);line-height:var(--leading-small);color:var(--c-text-2)}
-
 /* collected */
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--c-border-strong)}
 .pair>div{padding:24px 28px 24px 0;border-bottom:1px solid var(--c-border)}

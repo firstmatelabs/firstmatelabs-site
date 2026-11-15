@@ -25,7 +25,7 @@ export function strippingCode() {
 }
 
 export function checkPrompt() {
-  const raw = S.receiveGeneratingRaw;
+  const raw = S.secPromptExampleLine;
   return [
     S.secPromptIntro,
     "",
